@@ -1,0 +1,35 @@
+{
+  "voice": {
+    "provider": "ElevenLabs",
+    "name": "Brian",
+    "voiceId": "nPczCjzI2devNBz1zQrb",
+    "modelId": "eleven_multilingual_v2",
+    "locale": "en-US"
+  },
+  "cues": [
+    {
+      "id": "01-hook",
+      "text": "AI can write a pull request in minutes. But someone still has to decide whether that code should ship. Kujo Foreman owns that decision. It gathers evidence, repairs what is safe, and stops when judgment belongs to a human."
+    },
+    {
+      "id": "02-intake",
+      "text": "This is the live golden demo, not a playback fixture. I start one release assessment against a real Git change. Foreman reconstructs the intent, analyzes the diff, writes acceptance criteria, then sends verification and risk work down separate lanes. Each stage reports its actions and evidence to the interface as it runs."
+    },
+    {
+      "id": "03-repair-boundary",
+      "text": "The checks find two different problems. First, an unambiguous documentation defect. The Repair Agent can change only a Foreman-managed workspace, within fixed file, patch, time, and iteration limits. It applies the small repair and reruns the affected checks. Then Foreman finds a payment-policy ambiguity. That decision has real consequences, so the agent refuses to guess."
+    },
+    {
+      "id": "04-human-evidence",
+      "text": "Foreman asks one precise question and shows why it stopped, the supporting evidence, and the available options. I authorize the observed payment behavior. Foreman records that authority, completes re-verification, and reaches Ready to Ship. The evidence timeline shows what ran, who produced each artifact, and what supports the final decision."
+    },
+    {
+      "id": "05-architecture",
+      "text": "Under the interface, a native Strands graph coordinates specialist agents, parallel work, conditional routes, shared state, and the bounded repair loop. Kujo provides the controls: typed state, capability profiles, repository analysis, verification contracts, repair policy, release judgment, and checksummed evidence. The cloud path runs Amazon Nova Pro through Bedrock on AgentCore Runtime, with CloudWatch logs."
+    },
+    {
+      "id": "06-close",
+      "text": "Foreman starts where coding agents stop. It does not ask people to trust a confident summary. It proves what it can, repairs only within its authority, and brings humans the decisions that are truly theirs. AI writes code. Foreman decides whether it ships."
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #050505; }
+      body { color: #f4f1e8; font-family: "JetBrains Mono", monospace; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #050505; }
+      .clip { position: absolute; inset: 0; }
+      .scene { width: 100%; height: 100%; padding: 78px 92px; background: #050505; overflow: hidden; }
+      .grid { position: absolute; inset: 0; opacity: .18; background-image: linear-gradient(rgba(244,241,232,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(244,241,232,.12) 1px, transparent 1px); background-size: 96px 96px; }
+      .rail { position: absolute; left: 92px; right: 92px; height: 2px; background: #f4f1e8; transform-origin: left center; }
+      .rail.top { top: 78px; } .rail.bottom { bottom: 78px; }
+      .meta { position: absolute; top: 100px; left: 92px; right: 92px; display: flex; justify-content: space-between; color: #a5a49f; font-size: 21px; letter-spacing: .12em; text-transform: uppercase; }
+      .orange { color: #ff4d00; }
+      .display { margin: 0; font-family: "League Gothic", sans-serif; font-weight: 400; letter-spacing: .01em; text-transform: uppercase; line-height: .88; }
+      .intro-copy { position: absolute; left: 92px; bottom: 175px; max-width: 1550px; }
+      .intro-copy h1 { font-size: 184px; }
+      .intro-copy p { margin: 34px 0 0; max-width: 1160px; font-size: 30px; line-height: 1.45; color: #c8c5bb; }
+      #product-video { width: 1920px; height: 1080px; object-fit: cover; background: #050505; }
+      .chapter { position: absolute; inset: auto auto 44px 56px; width: 680px; height: auto; padding: 18px 24px; background: rgba(5,5,5,.93); border: 2px solid #f4f1e8; }
+      .chapter small { display: block; color: #ff4d00; font-size: 18px; letter-spacing: .16em; text-transform: uppercase; }
+      .chapter b { display: block; margin-top: 7px; font-family: "League Gothic", sans-serif; font-size: 48px; font-weight: 400; letter-spacing: .02em; text-transform: uppercase; }
+      .architecture { display: grid; grid-template-columns: 520px 1fr; gap: 72px; align-items: center; }
+      .architecture-copy { position: relative; z-index: 2; }
+      .architecture-copy h2 { font-size: 126px; }
+      .architecture-copy p { margin-top: 28px; color: #c8c5bb; font-size: 27px; line-height: 1.5; }
+      .architecture-image { position: relative; z-index: 2; width: 100%; padding: 22px; background: #f4f1e8; border: 3px solid #ff4d00; box-shadow: 18px 18px 0 rgba(255,77,0,.55); }
+      .close-copy { position: absolute; left: 92px; top: 205px; max-width: 1600px; }
+      .close-copy h2 { font-size: 176px; }
+      .close-copy p { margin-top: 40px; font-size: 29px; color: #c8c5bb; }
+      .close-mark { position: absolute; right: 92px; bottom: 108px; width: 152px; height: 152px; display: block; background: #fff; object-fit: cover; }
+      .credit { position: absolute; left: 92px; bottom: 105px; font-size: 18px; color: #8d8b84; letter-spacing: .08em; text-transform: uppercase; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-ogy9" id="root" data-composition-id="main" data-start="0" data-duration="142" data-width="1920" data-height="1080">
+      <section data-hf-id="hf-aqkl" id="intro" class="clip" data-start="0" data-duration="16" data-track-index="0">
+        <div data-hf-id="hf-qaxj" id="intro-inner" class="scene">
+          <div data-hf-id="hf-kxq8" class="grid"></div><div data-hf-id="hf-ktht" class="rail top"></div><div data-hf-id="hf-idkp" class="rail bottom"></div>
+          <div data-hf-id="hf-puvz" class="meta"><span data-hf-id="hf-r4wg">KUJO FOREMAN / RELEASE READINESS</span><span data-hf-id="hf-02e5">STRANDS + KUJO + AGENTCORE</span></div>
+          <div data-hf-id="hf-3wp0" class="intro-copy"><h1 data-hf-id="hf-wfv8" class="display">AI WRITES CODE.<br data-hf-id="hf-x5px"><span data-hf-id="hf-9ai6" class="orange">FOREMAN DECIDES</span><br data-hf-id="hf-rsrt">WHETHER IT SHIPS.</h1><p data-hf-id="hf-puqh">Evidence, bounded repair, and human judgment at the exact point where each belongs.</p></div>
+        </div>
+      </section>
+
+      <video data-hf-id="hf-cfwb" id="product-video" class="clip" src="assets/foreman-live.mp4" data-start="16" data-duration="75.5" data-media-start="0" data-playback-rate="0.79" data-track-index="1" muted playsinline></video>
+      <div data-hf-id="hf-cc4s" id="chapter-assessment" class="chapter clip" data-start="16" data-duration="23" data-track-index="3"><small data-hf-id="hf-gh22">01 / LIVE CHANGE ASSESSMENT</small><b data-hf-id="hf-hphk">REAL REPOSITORY. REAL CHECKS.</b></div>
+      <div data-hf-id="hf-9hii" id="chapter-repair" class="chapter clip" data-start="39" data-duration="27" data-track-index="3"><small data-hf-id="hf-nmzg">02 / BOUNDED AUTONOMY</small><b data-hf-id="hf-w5x7">REPAIR WHAT IS SAFE.</b></div>
+      <div data-hf-id="hf-w9rk" id="chapter-boundary" class="chapter clip" data-start="66" data-duration="25.5" data-track-index="3"><small data-hf-id="hf-a9cb">03 / ACCOUNTABLE BOUNDARY</small><b data-hf-id="hf-iy1m">STOP WHERE HUMANS DECIDE.</b></div>
+
+      <section data-hf-id="hf-aiq8" id="architecture" class="clip" data-start="91.5" data-duration="30.5" data-track-index="4">
+        <div data-hf-id="hf-s389" id="architecture-inner" class="scene architecture">
+          <div data-hf-id="hf-6qwo" class="grid"></div><div data-hf-id="hf-ar45" class="rail top"></div><div data-hf-id="hf-vwnh" class="rail bottom"></div>
+          <div data-hf-id="hf-zjfj" class="meta"><span data-hf-id="hf-ic1a">IMPLEMENTED ARCHITECTURE</span><span data-hf-id="hf-5929" class="orange">COGNITION / CONTROL / EVIDENCE</span></div>
+          <div data-hf-id="hf-h30l" class="architecture-copy"><h2 data-hf-id="hf-2o29" class="display">STRANDS<br data-hf-id="hf-szow"><span data-hf-id="hf-8aso" class="orange">THINKS.</span><br data-hf-id="hf-sldv">KUJO<br data-hf-id="hf-qluq">CONTROLS.</h2><p data-hf-id="hf-uwsz">AgentCore runs the private cloud path. Kujo keeps authority and release judgment explicit.</p></div>
+          <img data-hf-id="hf-d4ga" class="architecture-image" src="assets/architecture.png" alt="Kujo Foreman architecture">
+        </div>
+      </section>
+
+      <section data-hf-id="hf-a2ds" id="close" class="clip" data-start="122" data-duration="20" data-track-index="5">
+        <div data-hf-id="hf-ltgp" id="close-inner" class="scene">
+          <div data-hf-id="hf-5jzl" class="grid"></div><div data-hf-id="hf-by18" class="rail top"></div><div data-hf-id="hf-x3kk" class="rail bottom"></div>
+          <div data-hf-id="hf-z54i" class="meta"><span data-hf-id="hf-ph5w">FOREMAN RUN / COMPLETE</span><span data-hf-id="hf-d3ls" class="orange">EVIDENCE BEFORE RELEASE</span></div>
+          <div data-hf-id="hf-x4gu" class="close-copy"><h2 data-hf-id="hf-ari6" class="display">NOT ANOTHER<br data-hf-id="hf-q7jp">CODING AGENT.<br data-hf-id="hf-regs"><span data-hf-id="hf-zeos" class="orange">THE RELEASE GATE.</span></h2><p data-hf-id="hf-bgmg">AI writes code. Foreman decides whether it ships.</p></div>
+          <div data-hf-id="hf-zgox" class="credit">Narration generated with ElevenLabs · Non-commercial hackathon submission</div>
+          <img data-hf-id="hf-ms4z" class="close-mark" src="assets/kujo-logomark.svg" alt="Kujo">
+        </div>
+      </section>
+
+      <audio data-hf-id="hf-uota" id="voice-01" src="assets/voice/01-hook.mp3" data-start="1" data-duration="13.7" data-track-index="10"></audio>
+      <audio data-hf-id="hf-7yl1" id="voice-02" src="assets/voice/02-intake.mp3" data-start="17" data-duration="19.93" data-track-index="10"></audio>
+      <audio data-hf-id="hf-27sg" id="voice-03" src="assets/voice/03-repair-boundary.mp3" data-start="39" data-duration="24.9" data-track-index="10"></audio>
+      <audio data-hf-id="hf-pami" id="voice-04" src="assets/voice/04-human-evidence.mp3" data-start="66" data-duration="22.95" data-track-index="10"></audio>
+      <audio data-hf-id="hf-ldvw" id="voice-05" src="assets/voice/05-architecture.mp3" data-start="92" data-duration="27.97" data-track-index="10"></audio>
+      <audio data-hf-id="hf-cbc0" id="voice-06" src="assets/voice/06-close.mp3" data-start="123" data-duration="16.26" data-track-index="10"></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#intro-inner .rail", { scaleX: 0 }, { scaleX: 1, duration: .7, ease: "power3.out" }, .15)
+        .fromTo("#intro-inner .meta", { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: .45, ease: "power2.out" }, .35)
+        .fromTo("#intro-inner h1", { opacity: 0, x: -70 }, { opacity: 1, x: 0, duration: .7, ease: "expo.out" }, .65)
+        .fromTo("#intro-inner p", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out" }, 1.2)
+        .fromTo("#architecture-inner", { opacity: 0 }, { opacity: 1, duration: .35, ease: "power1.out" }, 91.5)
+        .fromTo("#architecture-inner .architecture-copy", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: .65, ease: "power3.out" }, 91.8)
+        .fromTo("#architecture-inner .architecture-image", { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: .75, ease: "expo.out" }, 91.9)
+        .fromTo("#close-inner .rail", { scaleX: 0 }, { scaleX: 1, duration: .7, ease: "power3.out" }, 122.1)
+        .fromTo("#close-inner .meta", { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: .45, ease: "power2.out" }, 122.35)
+        .fromTo("#close-inner h2", { opacity: 0, x: -70 }, { opacity: 1, x: 0, duration: .7, ease: "expo.out" }, 122.7)
+        .fromTo("#close-inner p, #close-inner .credit", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .5, ease: "power2.out", stagger: .12 }, 123.25)
+        .fromTo("#close-inner .close-mark", { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .6, ease: "back.out(1.7)" }, 123.5);
+      window.__timelines.main = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "01-hook",
+    "provider": "ElevenLabs",
+    "voice": "Brian",
+    "model": "eleven_multilingual_v2",
+    "inputSha256": "8abebb9701418e92d390d16e8d2c8ab5279f3c7111e0a25312b4b1a643c2f7f4",
+    "audioSha256": "257a610fb5f657256020aea32bf58cdd9d9a35a1b06305c3a03fbbf7e6557b5d",
+    "usage": "non-commercial hackathon submission",
+    "attributionRequired": true,
+    "generatedAt": "2026-09-14T17:06:57.104Z"
+  },
+  {
+    "id": "02-intake",
+    "provider": "ElevenLabs",
+    "voice": "Brian",
+    "model": "eleven_multilingual_v2",
+    "inputSha256": "71ae766047ce2f5beda788440c147d30610af9d362dad9ed6513cebd843403ec",
+    "audioSha256": "98dad08f3111e9c3aeb973b47f752b40774776dac3c1797f7898e6fa98278d39",
+    "usage": "non-commercial hackathon submission",
+    "attributionRequired": true,
+    "generatedAt": "2026-09-14T17:07:01.480Z"
+  },
+  {
+    "id": "03-repair-boundary",
+    "provider": "ElevenLabs",
+    "voice": "Brian",
+    "model": "eleven_multilingual_v2",
+    "inputSha256": "e21d578859087f78cf6782beb739f955f92281a60a413f49a33a7dd94cd8e2ee",
+    "audioSha256": "82ce01b43a436c31266bd204d6435822ad575f1792e208d5e1386a92bf1358b5",
+    "usage": "non-commercial hackathon submission",
+    "attributionRequired": true,
+    "generatedAt": "2026-09-14T17:07:06.569Z"
+  },
+  {
+    "id": "04-human-evidence",
+    "provider": "ElevenLabs",
+    "voice": "Brian",
+    "model": "eleven_multilingual_v2",
+    "inputSha256": "8335beae80ab0745f46b5de2f698bbbf83054a03c99163a8ac160f9efd43e639",
+    "audioSha256": "b192be234b2970ff54c5a18f7a3662d71bd9196fe1060e4f70297fb7ebbbfb99",
+    "usage": "non-commercial hackathon submission",
+    "attributionRequired": true,
+    "generatedAt": "2026-09-14T17:07:11.285Z"
+  },
+  {
+    "id": "05-architecture",
+    "provider": "ElevenLabs",
+    "voice": "Brian",
+    "model": "eleven_multilingual_v2",
+    "inputSha256": "01b7dd5e4a919991017b44b9db1d970036c97fb29ee89e30c1937cb65616427c",
+    "audioSha256": "7df2999554f0bc37d89195b5e601c69c53ef68761da3fc11177fb4afe4e44fe2",
+    "usage": "non-commercial hackathon submission",
+    "attributionRequired": true,
+    "generatedAt": "2026-09-14T17:07:16.748Z"
+  },
+  {
+    "id": "06-close",
+    "provider": "ElevenLabs",
+    "voice": "Brian",
+    "model": "eleven_multilingual_v2",
+    "inputSha256": "0549e6cebaf074b4c41ee03fda399a54b17927c232dad7fb7887bf2127018683",
+    "audioSha256": "39a3b3bd9e9ec44074ab5e4f073c2dc751545dd9703a00135f25e616e877e56d",
+    "usage": "non-commercial hackathon submission",
+    "attributionRequired": true,
+    "generatedAt": "2026-09-14T17:07:21.134Z"
+  }
+]

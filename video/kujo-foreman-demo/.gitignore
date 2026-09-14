@@ -1,0 +1,5 @@
+.thumbnails/
+.waveform-cache/
+capture*/
+lens-run*/
+snapshots*/

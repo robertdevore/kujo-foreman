@@ -1,0 +1,33 @@
+{
+  "name": "Kujo Foreman golden demo",
+  "url": "http://127.0.0.1:4173/new",
+  "viewports": ["1920x1080"],
+  "timeout_seconds": 120,
+  "allow_external": false,
+  "allow_destructive": false,
+  "steps": [
+    { "wait_for_text": "Put evidence between" },
+    { "wait": { "ms": 5000 } },
+    { "screenshot": { "name": "01-intake" } },
+    { "click": { "selector": "button:has-text(\"RUN GOLDEN DEMO\")", "safe": true } },
+    { "wait_for_text": "Human decision required" },
+    { "wait": { "ms": 7000 } },
+    { "scroll": { "selector": "#human-decision-title" } },
+    { "wait": { "ms": 8000 } },
+    { "screenshot": { "name": "02-human-boundary" } },
+    { "click": { "selector": "button:has-text(\"RECORD DECISION & CONTINUE\")", "safe": true } },
+    { "wait_for_text": "Ready to ship" },
+    { "scroll": { "y": 0 } },
+    { "wait": { "ms": 8000 } },
+    { "screenshot": { "name": "03-ready" } },
+    { "click": { "selector": "a:has-text(\"VIEW EVIDENCE\")", "safe": true } },
+    { "wait_for_text": "Evidence timeline" },
+    { "wait": { "ms": 7000 } },
+    { "scroll": { "y": 900 } },
+    { "wait": { "ms": 7000 } },
+    { "screenshot": { "name": "04-evidence" } },
+    { "assert_text": "Release decision" },
+    { "assert_no_console_errors": true },
+    { "assert_no_failed_requests": true }
+  ]
+}
