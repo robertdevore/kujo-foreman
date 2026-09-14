@@ -15,4 +15,16 @@ describe("runtime transport", () => {
     expect(await (await fetch(`http://127.0.0.1:${port}/ping`)).json()).toEqual({ status: "Healthy" });
     expect(await (await fetch(`http://127.0.0.1:${port}/healthz`)).json()).toMatchObject({ ok: true, orchestration: "strands-graph", domainRuntime: "kujo", mode: "offline" });
   });
+
+  it("honors the writable AgentCore state root", () => {
+    const previous = process.env.FOREMAN_STATE_ROOT;
+    process.env.FOREMAN_STATE_ROOT = "/tmp/foreman-agentcore-test";
+    try {
+      const { store } = createApp({ projectRoot: process.cwd(), mode: "offline" });
+      expect(store.root).toBe("/tmp/foreman-agentcore-test");
+    } finally {
+      if (previous === undefined) delete process.env.FOREMAN_STATE_ROOT;
+      else process.env.FOREMAN_STATE_ROOT = previous;
+    }
+  });
 });

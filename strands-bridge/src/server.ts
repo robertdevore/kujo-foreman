@@ -12,7 +12,7 @@ const asyncRoute = (handler: AsyncHandler) => (req: Request, res: Response, next
 
 export function createApp(options: { projectRoot?: string; stateRoot?: string; mode?: "bedrock" | "offline" } = {}) {
   const projectRoot = options.projectRoot ?? defaultProjectRoot;
-  const stateRoot = options.stateRoot ?? path.join(projectRoot, ".foreman");
+  const stateRoot = options.stateRoot ?? process.env.FOREMAN_STATE_ROOT ?? path.join(projectRoot, ".foreman");
   const mode = options.mode ?? (process.env.FOREMAN_MODE === "offline" ? "offline" : "bedrock");
   const store = new RunStore(stateRoot); const service = new ForemanService(projectRoot, store, mode); const app = express();
   app.disable("x-powered-by"); app.use(express.json({ limit: "32kb" }));

@@ -1,10 +1,17 @@
 FROM debian:bookworm-slim AS kujo-runtime
 ARG KUJO_VERSION=1.4.0
-ARG KUJO_ARCHIVE_SHA256=49a4803b70b51a5d6cba04b5aba2bbe8786d19ec15861c18b67c3bac8670233c
+ARG TARGETARCH
+ARG KUJO_SHA256_AMD64=49a4803b70b51a5d6cba04b5aba2bbe8786d19ec15861c18b67c3bac8670233c
+ARG KUJO_SHA256_ARM64=d5faf688f33a651d41a614706733d5e3428f9f686915076aff1cb7365d764014
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl \
-    && curl -fsSLo /tmp/kujo.tar.gz "https://github.com/kujolang/kujo/releases/download/v${KUJO_VERSION}/kujo-v${KUJO_VERSION}-linux-x64.tar.gz" \
-    && echo "${KUJO_ARCHIVE_SHA256}  /tmp/kujo.tar.gz" | sha256sum -c - \
+    && case "${TARGETARCH}" in \
+         amd64) kujo_arch=x64; kujo_sha="${KUJO_SHA256_AMD64}" ;; \
+         arm64) kujo_arch=arm64; kujo_sha="${KUJO_SHA256_ARM64}" ;; \
+         *) echo "unsupported target architecture: ${TARGETARCH}" >&2; exit 1 ;; \
+       esac \
+    && curl -fsSLo /tmp/kujo.tar.gz "https://github.com/kujolang/kujo/releases/download/v${KUJO_VERSION}/kujo-v${KUJO_VERSION}-linux-${kujo_arch}.tar.gz" \
+    && echo "${kujo_sha}  /tmp/kujo.tar.gz" | sha256sum -c - \
     && tar -xzf /tmp/kujo.tar.gz -C /usr/local/bin
 
 FROM node:22-bookworm-slim AS bridge
@@ -28,7 +35,8 @@ COPY --from=bridge /app/strands-bridge/dist ./strands-bridge/dist
 COPY main.kujo kujo.toml ./
 COPY src ./src
 COPY abilities ./abilities
-ENV NODE_ENV=production PORT=8080 FOREMAN_MODE=bedrock KUJO_BIN=/usr/local/bin/kujo
+COPY demo ./demo
+ENV NODE_ENV=production PORT=8080 FOREMAN_MODE=bedrock KUJO_BIN=/usr/local/bin/kujo FOREMAN_STATE_ROOT=/tmp/kujo-foreman
 USER foreman
 EXPOSE 8080
 CMD ["node", "strands-bridge/dist/server.js"]
