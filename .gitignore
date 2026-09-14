@@ -22,3 +22,8 @@ artifacts/runs/*
 .kujo_cache/
 demo/workspace/
 .loop-engineering/
+agentcore/.env.local
+agentcore/.cli/
+agentcore/.cache/
+agentcore/cdk/cdk.out/
+agentcore/cdk/node_modules/

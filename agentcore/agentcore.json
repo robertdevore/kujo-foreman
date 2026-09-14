@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.agentcore.aws.dev/v1/agentcore.json",
+  "name": "KujoForeman",
+  "version": 1,
+  "managedBy": "CDK",
+  "tags": {
+    "agentcore:created-by": "agentcore-cli",
+    "agentcore:project-name": "KujoForeman",
+    "project": "kujo-foreman"
+  },
+  "runtimes": [
+    {
+      "name": "Foreman",
+      "description": "Kujo-native autonomous release-readiness runtime orchestrated by Strands",
+      "build": "Container",
+      "entrypoint": "strands-bridge/dist/server.js",
+      "codeLocation": ".",
+      "buildContextPath": ".",
+      "dockerfile": "agentcore/Dockerfile",
+      "runtimeVersion": "NODE_22",
+      "networkMode": "PUBLIC",
+      "protocol": "HTTP",
+      "authorizerType": "AWS_IAM",
+      "instrumentation": {
+        "enableOtel": false
+      },
+      "additionalPolicies": [
+        "agentcore/bedrock-invoke-policy.json"
+      ],
+      "envVars": [
+        {
+          "name": "FOREMAN_MODE",
+          "value": "bedrock"
+        },
+        {
+          "name": "FOREMAN_BEDROCK_MODEL",
+          "value": "global.anthropic.claude-sonnet-4-6"
+        },
+        {
+          "name": "FOREMAN_STATE_ROOT",
+          "value": "/tmp/kujo-foreman"
+        },
+        {
+          "name": "KUJO_BIN",
+          "value": "/usr/local/bin/kujo"
+        }
+      ],
+      "lifecycleConfiguration": {
+        "idleRuntimeSessionTimeout": 900,
+        "maxLifetime": 3600
+      }
+    }
+  ],
+  "memories": [],
+  "knowledgeBases": [],
+  "credentials": [],
+  "evaluators": [],
+  "onlineEvalConfigs": [],
+  "agentCoreGateways": [],
+  "policyEngines": [],
+  "configBundles": [],
+  "abTests": [],
+  "harnesses": [],
+  "datasets": [],
+  "capacityProviders": [],
+  "payments": []
+}

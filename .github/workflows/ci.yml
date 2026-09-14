@@ -23,6 +23,7 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: |
+            agentcore/cdk/package-lock.json
             apps/web/package-lock.json
             strands-bridge/package-lock.json
       - name: Install verified Kujo runtime
@@ -38,3 +39,16 @@ jobs:
         run: kujo check main.kujo && kujo test -v
       - name: Verify bridge and operator console
         run: npm run check
+      - name: Validate AgentCore deployment
+        run: |
+          npm install -g @aws/agentcore@0.29.0 --ignore-scripts
+          npm run agentcore:validate
+          npm --prefix agentcore/cdk audit --audit-level=high
+      - name: Build and smoke AgentCore container
+        run: |
+          docker build --file agentcore/Dockerfile --build-arg TARGETARCH=amd64 --tag kujo-foreman:ci .
+          docker run --detach --rm --name kujo-foreman-ci --publish 127.0.0.1:8080:8080 --env FOREMAN_MODE=offline kujo-foreman:ci
+          npm run agentcore:smoke
+      - name: Stop AgentCore container
+        if: always()
+        run: docker stop kujo-foreman-ci 2>/dev/null || true

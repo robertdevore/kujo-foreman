@@ -47,6 +47,6 @@ September 13, 2026.
 
 - [x] Fresh install rehearsal completed from a clean clone.
 - [x] Golden demo rehearsal completed within five minutes.
-- [x] Architecture and demo claims reconciled against the verified local product; AWS remains explicitly undeployed.
+- [x] AgentCore CLI configuration validates; CDK compiles; AWS remains explicitly undeployed after STS rejected the configured credentials.
 - [ ] Devpost preview checked for broken links, image rendering, and license detection.
 - [ ] Submission clicked and confirmation captured.

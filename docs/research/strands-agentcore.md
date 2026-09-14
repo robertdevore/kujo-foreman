@@ -46,6 +46,7 @@ Important sources:
 - [Policy concepts](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/policy-core-concepts.html)
 - [Service limits](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/bedrock-agentcore-limits.html)
 
-No AWS credentials or AWS CLI were available during this build, so deployment
-artifacts are complete but no deployed resource is claimed.
-
+The current npm-distributed AgentCore CLI 0.29.0 configuration, CDK application,
+least-privilege Bedrock policy, and multi-architecture container are checked in.
+The configured local AWS credentials were rejected by STS during the final
+deployment attempt, so no deployed resource is claimed.

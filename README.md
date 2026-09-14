@@ -132,10 +132,12 @@ specialists use Amazon Bedrock through Strands. Offline mode is deterministic bu
 still runs real Kujo commands and repository checks; it is intended for local
 development, tests, and reliable rehearsals—not as a fake result mode.
 
-AgentCore Runtime files are in [agentcore](agentcore/README.md). The service
-exposes AgentCore's `/ping` and `/invocations` contract as well as the browser API.
-Deployment requires AWS credentials and is never claimed unless the smoke test
-against the deployed endpoint succeeds.
+AgentCore Runtime files are in [agentcore](agentcore/README.md), including the
+current CLI configuration, generated CDK application, scoped Bedrock policy, and
+multi-architecture container. The service exposes AgentCore's `/ping` and
+`/invocations` contract as well as the browser API. Deployment requires valid AWS
+credentials and is never claimed unless the smoke test against the deployed
+endpoint succeeds.
 
 ## Release evidence
 
@@ -180,6 +182,12 @@ kujo test -v
 
 # Bridge + UI unit tests, type checks, and production builds
 npm run check
+
+# AgentCore schema/CDK validation (requires @aws/agentcore 0.29.0)
+npm run agentcore:validate
+
+# Full containerized golden-path smoke test after starting the image
+npm run agentcore:smoke
 
 # Deterministic multi-scenario evaluation
 kujo run --isolated-imports --interpreter ../eval/main.kujo \
