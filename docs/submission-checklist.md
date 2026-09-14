@@ -45,9 +45,8 @@ September 13, 2026.
 
 ## Final judge-perspective review
 
-- [ ] Fresh install rehearsal completed from a clean clone.
-- [ ] Golden demo rehearsal completed within five minutes.
-- [ ] Architecture and demo claims reconciled against the deployed product.
+- [x] Fresh install rehearsal completed from a clean clone.
+- [x] Golden demo rehearsal completed within five minutes.
+- [x] Architecture and demo claims reconciled against the verified local product; AWS remains explicitly undeployed.
 - [ ] Devpost preview checked for broken links, image rendering, and license detection.
 - [ ] Submission clicked and confirmation captured.
-
