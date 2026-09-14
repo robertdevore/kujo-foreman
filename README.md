@@ -5,12 +5,14 @@
 Kujo Foreman is an autonomous release-readiness agent built with Kujo, Strands
 Agents, Amazon Bedrock, and Amazon Bedrock AgentCore. Give it a Git change. It
 reconstructs intent, derives acceptance criteria, runs repository-native checks,
-investigates risk, applies only bounded repairs, and emits tamper-evident release
+investigates risk, applies only bounded repairs, and emits checksummed release
 evidence. When machine judgment is no longer appropriate, Foreman stops with one
 compact human decision.
 
 This is not a chat-based pull-request reviewer. The product owns the outcome
 between `CODE COMPLETE` and `SAFE TO SHIP`.
+
+![Kujo Foreman live release decision](docs/foreman-live.png)
 
 ![Foreman architecture](docs/architecture.png)
 
@@ -31,13 +33,13 @@ attempt, and an unauthorized change to financial retry semantics. Foreman:
 
 ### Run it locally
 
-Prerequisites are Node.js 22+, Git, and Kujo 1.4.0. Build Kujo from the sibling
-`kujo` checkout or set `KUJO_BIN` to a compatible binary.
+Prerequisites are Node.js 22+, Git, and Kujo 1.4.0. Download the matching Kujo
+1.4.0 archive from the [release page](https://github.com/kujolang/kujo/releases/tag/v1.4.0),
+put `kujo` on your `PATH`, and verify it with `kujo --version`.
 
 ```bash
 npm run install:all
-cp .env.example .env
-KUJO_BIN=../kujo/target/debug/kujo npm run dev
+npm run dev
 ```
 
 In another terminal:
@@ -101,22 +103,21 @@ conflicting, failed, or still needs human authority. See
 
 ## Kujo integration
 
-Foreman uses existing Kujo infrastructure where it is mature and preserves its
-identity rather than relabeling it:
+Foreman keeps the line between direct runtime dependencies and compatible
+integration contracts explicit:
 
-| Component | Role |
+| Component | Integration |
 |---|---|
-| Kujo 1.4 | Foreman runtime, CLI, tests, process execution, and typed modules |
-| Ability 1.1 | Capability identity, schemas, declared effects, policy, approvals, and receipts |
-| Ability MCP 1.2 | Existing portable projection boundary and canonical Kujo capability IDs |
-| Workcell 1.1 | Validated Docker/Podman deployment contract for untrusted repository execution |
-| Spec 1.0.1 | Acceptance-criteria contract validation |
-| Eval 1.0 | Deterministic scenario evaluation |
-| Scout 1.0 | Repository discovery used during development and available to adapters |
-| ShipCheck 1.0 | Repository/release-hygiene gate, never the release judge |
-| RunLedger 1.1 | Correlated development and release receipts |
-| CaseFile 1.0 | Optional failure-evidence bundles |
-| Watchdog 1.0.1 | Optional local event/telemetry sink |
+| Kujo 1.4 | Direct product runtime for Git inspection, policy, verification, repair, judging, evidence, CLI, and tests |
+| Ability 1.1 | Canonical capability identities and effect semantics represented by the checked-in catalog and role profiles |
+| Spec 1.0.1 | Acceptance-criteria semantics used by the specification capability and artifact |
+| Workcell 1.1 | Validated production isolation contract; the demo honestly reports its bounded managed Git workspace |
+| Eval 1.0 | Suite format for the seven fail-closed disposition scenarios |
+| SiteKit 1.0 | Kujo visual language vendored under its own license |
+
+Scout, PatchBrief, Fence, ShipCheck, RunLedger, CaseFile, Muzzle, and Watchdog
+were audited as integration seams. They are not presented as calls on the
+golden runtime path unless a repository supplies the corresponding contract.
 
 The checked-in [Ability catalog](abilities/catalog.json) and profiles make
 authority inspectable. Analysis is read-only, verification may execute inside an
@@ -168,9 +169,9 @@ authority profile, passes command arguments without a shell, confines writes to
 managed workspaces, binds repair proposals to the expected file digest, and
 requires explicit human authority for consequential semantics. Declared Ability
 effects remain separate from Workcell's enforcement boundary. The local demo
-runs checks in a Foreman-managed disposable Git repository because no container
-daemon is available on this host; it labels that executor honestly. Production
-must bind `verification.execute` to the validated Workcell definition.
+runs checks in a Foreman-managed disposable Git repository and labels that
+executor honestly. Production repository intake must bind
+`verification.execute` to the validated Workcell definition.
 
 An incomplete run cannot become ready. A stopped run, broken tool, timeout,
 malformed structured output, failed check, missing evidence item, or unresolved
@@ -191,8 +192,6 @@ npm run agentcore:validate
 # Full containerized golden-path smoke test after starting the image
 npm run agentcore:smoke
 
-# Deterministic multi-scenario evaluation is included in the Kujo suite
-kujo test -v
 ```
 
 The suite covers clean, repairable, regressed, ambiguous, prompt-injected,

@@ -1,6 +1,6 @@
 # Competition compliance research
 
-Reviewed September 13, 2026 against the [official hackathon overview](https://agentsforhumans.devpost.com/)
+Reviewed September 14, 2026 against the [official hackathon overview](https://agentsforhumans.devpost.com/)
 and [official rules](https://agentsforhumans.devpost.com/rules).
 
 - Submission closes September 14, 2026 at 5:00 PM PDT / 8:00 PM EDT.
@@ -22,4 +22,3 @@ and [official rules](https://agentsforhumans.devpost.com/rules).
 The repository release gate treats every submission claim as a contract: a
 configured integration is never described as deployed, and static fixtures
 are never described as live output.
-

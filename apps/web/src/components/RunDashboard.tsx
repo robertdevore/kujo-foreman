@@ -1,4 +1,5 @@
 import { foremanApi } from "../lib/api";
+import { repositoryLabel } from "../lib/presentation";
 import { useRun } from "../lib/use-run";
 import { CapabilityBoundary } from "./CapabilityBoundary";
 import { EvidenceView } from "./EvidenceView";
@@ -32,7 +33,7 @@ export function RunDashboard({ id, preview, evidence = false }: { id: string; pr
     <div className="page run-page">
       {preview && <div className="fixture-banner" role="status"><b>PREVIEW FIXTURE</b><span>Static sample data for product evaluation. No repository checks were executed.</span><a href="/new">Start a real run</a></div>}
       <header className="run-header">
-        <div><div className="run-kicker"><span className={`live-dot live-dot--${state.connection}`} aria-hidden="true" /><span>{preview ? "STATIC PREVIEW" : state.connection === "live" ? "LIVE EVIDENCE STREAM" : state.connection.toUpperCase()}</span><span>RUN #{run.id}</span></div><h1>{run.repository}</h1><p><code>{run.ref}</code>{run.compareRef && <> against <code>{run.compareRef}</code></>}</p></div>
+        <div><div className="run-kicker"><span className={`live-dot live-dot--${state.connection}`} aria-hidden="true" /><span>{preview ? "STATIC PREVIEW" : state.connection === "live" ? "LIVE EVIDENCE STREAM" : state.connection.toUpperCase()}</span><span>RUN #{run.id}</span></div><h1 title={run.repository}>{repositoryLabel(run.repository)}</h1><p><code>{run.ref}</code>{run.compareRef && <> against <code>{run.compareRef}</code></>}</p></div>
         <div className="run-actions"><a className="sk-button sk-button--secondary" href={preview ? "/preview/evidence" : `/runs/${run.id}/evidence`}>View evidence</a>{!preview && run.status === "running" && <button className="sk-button sk-button--secondary" type="button" onClick={stopRun}>Stop run</button>}</div>
       </header>
 

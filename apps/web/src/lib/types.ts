@@ -126,8 +126,9 @@ export interface RunState {
 }
 
 export interface StartRunRequest {
-  repository: string;
-  ref: string;
+  repository?: string;
+  ref?: string;
   compareRef?: string;
-  intent: string;
+  intent?: string;
+  demo?: boolean;
 }

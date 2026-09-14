@@ -11,7 +11,7 @@ to decide whether that code should actually ship. That's what Foreman does.”
 
 ## 0:18–0:42 — Product, not chat
 
-**Picture:** New-run form. Select the payment retry demo and start.
+**Picture:** New-run form. Choose **Run golden demo**.
 
 **Narration:** “Foreman owns everything between code complete and safe to ship:
 intent, diff analysis, verification, risk, bounded repair, human escalation,
@@ -34,11 +34,10 @@ Risk start together. Point to authority panel.
 
 **Narration:** “This change adds configurable payment retries. Foreman reads the
 actual Git range, quarantines repository text as untrusted data, reconstructs
-five acceptance criteria, and fans out independent verification and risk work.
+explicit acceptance criteria, and fans out independent verification and risk work.
 Notice each agent's authority. The analyst cannot write. The judge cannot touch
-source. In production verification binds to Workcell; this local recording uses
-the displayed managed-workspace executor because the container daemon is not
-available.”
+source. The recording uses the displayed managed-workspace executor; production
+repository intake binds the same verification capability to Workcell.”
 
 ## 1:45–2:28 — Discover and repair
 
@@ -47,7 +46,7 @@ exact before digest, one-file/one-line bound, then applied and rechecked.
 
 **Narration:** “The ordinary suite passes, but Foreman finds a deterministic
 documentation mismatch. That is eligible for autonomous repair: one exact
-replacement, in an isolated worktree, bound to the file digest. It applies the
+replacement, in the managed workspace, bound to the file digest. It applies the
 repair and reruns affected evidence. If the file had changed, the proposal
 would fail as stale.”
 

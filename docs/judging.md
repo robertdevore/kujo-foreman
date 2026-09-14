@@ -1,6 +1,6 @@
 # Judge-perspective audit
 
-Reviewed against the official rubric on September 13, 2026. Scores are an
+Reviewed against the official rubric on September 14, 2026. Scores are an
 internal readiness assessment, not a claim about judging results.
 
 | Dimension | Readiness | What would raise it |

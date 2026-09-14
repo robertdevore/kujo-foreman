@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { matchRoute } from "./App";
 import { HumanDecisionPanel } from "./components/HumanDecisionPanel";
+import { NewRun } from "./components/NewRun";
 import { previewRun } from "./lib/preview-fixture";
 
 describe("routing", () => {
@@ -20,5 +21,13 @@ describe("human decision boundary", () => {
     expect(screen.getByText(/externally observable financial behavior/i)).toBeInTheDocument();
     expect(screen.getByText(/disabled in preview fixture/i)).toBeInTheDocument();
     expect(screen.getAllByRole("radio")[0]).toBeDisabled();
+  });
+});
+
+describe("golden path", () => {
+  it("offers a real golden run separately from the static preview", () => {
+    render(<NewRun />);
+    expect(screen.getByRole("button", { name: /run golden demo/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /inspect static preview/i })).toBeInTheDocument();
   });
 });

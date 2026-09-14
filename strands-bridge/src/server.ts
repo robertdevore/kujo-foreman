@@ -13,7 +13,7 @@ const asyncRoute = (handler: AsyncHandler) => (req: Request, res: Response, next
 export function createApp(options: { projectRoot?: string; stateRoot?: string; mode?: "bedrock" | "offline" } = {}) {
   const projectRoot = options.projectRoot ?? defaultProjectRoot;
   const stateRoot = options.stateRoot ?? process.env.FOREMAN_STATE_ROOT ?? path.join(projectRoot, ".foreman");
-  const mode = options.mode ?? (process.env.FOREMAN_MODE === "offline" ? "offline" : "bedrock");
+  const mode = options.mode ?? (process.env.FOREMAN_MODE === "bedrock" ? "bedrock" : "offline");
   const store = new RunStore(stateRoot); const service = new ForemanService(projectRoot, store, mode); const app = express();
   app.disable("x-powered-by"); app.use(express.json({ limit: "32kb" }));
   app.use((_req, res, next) => { res.setHeader("Access-Control-Allow-Origin", process.env.FOREMAN_WEB_ORIGIN ?? "*"); res.setHeader("Access-Control-Allow-Headers", "Content-Type, Last-Event-ID"); res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); next(); });

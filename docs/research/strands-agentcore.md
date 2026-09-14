@@ -1,6 +1,6 @@
 # Strands Agents and AgentCore research
 
-Reviewed September 13, 2026 from current official documentation.
+Reviewed September 14, 2026 from current official documentation.
 
 ## Strands choice
 

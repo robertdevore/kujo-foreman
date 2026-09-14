@@ -2,7 +2,7 @@
 
 Source of truth: the [official overview](https://agentsforhumans.devpost.com/)
 and [official rules](https://agentsforhumans.devpost.com/rules), reviewed on
-September 13, 2026.
+September 14, 2026.
 
 ## Eligibility and compliance
 

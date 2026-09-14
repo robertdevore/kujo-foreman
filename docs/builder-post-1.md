@@ -19,8 +19,8 @@ semantics. Those remain deterministic Kujo contracts.
 
 This produces an important architectural split:
 
-- Strands owns cognition, orchestration, streaming, lifecycle hooks, sessions,
-  model retries, and OpenTelemetry.
+- Strands owns cognition, graph orchestration, the Bedrock model boundary,
+  streaming, and lifecycle events.
 - Kujo owns controlled execution, policy, deterministic verification, and
   evidence integrity.
 
@@ -32,4 +32,3 @@ a synthetic progress bar.
 The result is an agent that can explain its work without exposing hidden
 reasoning. Users see actions, capabilities, evidence, decisions, duration, and
 disposition. That is the operational vocabulary professional agents need.
-

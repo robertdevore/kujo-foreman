@@ -20,11 +20,11 @@ change → specification → verification ─┐
                                       └── re-evaluate
       │
       ▼
-Kujo Ability profiles → MCP / local bindings → execution adapter
+Kujo capability profiles → local process binding → execution adapter
       │                                      │
-      ├─ Scout / PatchBrief / Spec / Eval    ├─ tests / build / lint
-      ├─ Fence / ShipCheck / RunLedger       └─ local managed workspace / Workcell production binding
-      └─ Watchdog metadata
+      ├─ canonical Ability identities        ├─ tests / build / lint
+      ├─ Spec semantics / Eval suites        └─ managed Git workspace
+      └─ optional repository adapters             / Workcell production contract
       │
       ▼
 Checksummed release evidence + live SSE projection

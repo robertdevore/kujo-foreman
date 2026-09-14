@@ -1,21 +1,50 @@
 # Devpost submission copy
 
+## Submission fields
+
+- **Title:** Kujo Foreman
+- **Tagline:** AI writes code. Foreman decides whether it ships.
+- **Track:** Professional Agents
+- **Intended users:** Software engineers, release engineers, security engineers,
+  and team leads who review changes produced by people or coding agents.
+- **Repository:** `https://github.com/robertdevore/kujo-foreman`
+- **Project image:** Upload `docs/foreman-live.png`.
+- **Architecture diagram:** Upload `docs/architecture.png`.
+- **Video:** Paste the public YouTube or Vimeo URL after upload.
+- **Live demo:** Leave blank. The deployed AgentCore Runtime is intentionally
+  private and IAM-authorized; the public repository includes a complete test build.
+- **Built with:** Kujo, Strands Agents SDK, Amazon Bedrock, Amazon Nova Pro,
+  Amazon Bedrock AgentCore Runtime, CloudWatch, TypeScript, React, Docker, and Git.
+- **AWS Builder ID:** Enter the email address tied to the Builder ID.
+
 ## One-line description
 
 Kujo Foreman is an autonomous release-readiness agent that verifies software
 changes, repairs bounded low-risk defects, and escalates only decisions that
 need human judgment.
 
+## Testing instructions
+
+1. Install Node.js 22+, Git, and the matching Kujo 1.4.0 binary from
+   `https://github.com/kujolang/kujo/releases/tag/v1.4.0`.
+2. Clone the public repository and run `npm run install:all`.
+3. Run `npm run dev`, then run `npm run dev:web` in a second terminal.
+4. Open `http://localhost:4173` and choose **Run golden demo**.
+5. When Foreman stops at the payment-policy boundary, choose **Authorize this
+   change**. The run must finish as `READY_TO_SHIP` with complete evidence.
+
+The static `/preview` route is labeled and is not the working demonstration.
+
 ## Inspiration
 
-AI can write a pull request in minutes. That does not answer whether the pull
-request should ship.
+AI can write a pull request in minutes. A developer still has to determine
+whether it satisfies the request, passes the right checks, preserves important
+boundaries, and has enough evidence to ship.
 
-The expensive part is moving: reconstructing intent, understanding a diff,
-choosing meaningful checks, executing them safely, investigating risk,
-repairing what is unambiguous, rerunning the right evidence, and stopping when
-a product or security decision belongs to a human. Most tools handle one slice
-of that work. Nobody owns the outcome.
+That work means reconstructing intent, understanding a diff, choosing useful
+checks, investigating risk, repairing what is unambiguous, and stopping when a
+product or security decision belongs to a human. Existing tools cover pieces of
+the process. Foreman owns the handoff from code complete to a release decision.
 
 Foreman starts where coding agents stop.
 
@@ -29,7 +58,7 @@ that Ability to Workcell
 isolation. Results become typed, checksummed evidence rather than a prose claim.
 
 When Foreman finds an exact low-risk defect, its Repair Agent can change only
-an isolated worktree, within deterministic file, line, time, and iteration
+a Foreman-managed workspace, within deterministic file, line, time, and iteration
 bounds. It then reruns the affected checks. Auth, payment, permission,
 destructive-data, migration, secret, and production-policy changes cannot be
 guessed. Foreman creates a compact decision packet, pauses, and continues only
@@ -49,18 +78,16 @@ A narrow TypeScript service uses Strands Agents substantially and visibly. A
 native Strands Graph coordinates specialist agents, uses a real parallel
 verification/risk fan-out with AND-semantics fan-in, shares invocation state,
 streams lifecycle events, enforces step and time bounds, and routes through
-repair, re-evaluation, or escalation. The official deployment path uses Amazon
-Bedrock models in AgentCore Runtime with OpenTelemetry/CloudWatch
-observability.
+repair, re-evaluation, or escalation. The deployed private runtime uses Amazon
+Nova Pro through Bedrock on AgentCore Runtime, with CloudWatch logs and
+structured lifecycle events.
 
-Kujo Ability gives every operation a stable identity, JSON schema, effect
-declaration, idempotency contract, and receipt. Each specialist sees only its
-profile. Workcell is the production container boundary; the submitted local
-demo uses an explicitly labeled managed Git workspace. Spec expresses acceptance
-criteria, Eval checks outcomes, Scout supplies repository intelligence,
-PatchBrief explains diffs, Fence checks architecture, ShipCheck checks release
-hygiene, RunLedger correlates attempts, CaseFile preserves difficult failures,
-and Watchdog can receive metadata-only lifecycle events.
+Kujo capability profiles give each operation a stable identity, declared effect,
+scope, and receipt. Each specialist sees only its profile. Workcell defines the
+production isolation contract; the submitted demo uses an explicitly labeled
+managed Git workspace. Kujo Spec semantics shape acceptance criteria, and Kujo
+Eval's suite format measures the seven expected release outcomes. Other Kujo
+tools remain optional repository-specific adapters rather than decorative calls.
 
 The UI is a focused release-control surface built with React and the Kujo
 SiteKit visual system. It renders real graph events, current authority,
@@ -96,6 +123,8 @@ reason, evidence, options, recommendation, and confidence.
 - A polished live interface that makes authority and autonomous work visible.
 - A deterministic golden change that includes success, repair, refusal,
   human input, re-evaluation, and payoff.
+- A deployed AgentCore Runtime whose real cloud smoke ends in a checksummed
+  `READY_TO_SHIP` decision.
 
 ## What we learned
 

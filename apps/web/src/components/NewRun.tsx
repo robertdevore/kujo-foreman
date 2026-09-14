@@ -5,18 +5,11 @@ export function NewRun() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
+  async function startRun(payload: Parameters<typeof foremanApi.startRun>[0]) {
     setPending(true);
     setError(undefined);
     try {
-      const run = await foremanApi.startRun({
-        repository: String(form.get("repository") ?? ""),
-        ref: String(form.get("ref") ?? ""),
-        compareRef: String(form.get("compareRef") ?? "") || undefined,
-        intent: String(form.get("intent") ?? ""),
-      });
+      const run = await foremanApi.startRun(payload);
       window.history.pushState({}, "", `/runs/${run.id}`);
       window.dispatchEvent(new PopStateEvent("popstate"));
     } catch (reason) {
@@ -25,12 +18,25 @@ export function NewRun() {
     }
   }
 
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    await startRun({
+      repository: String(form.get("repository") ?? ""),
+      ref: String(form.get("ref") ?? ""),
+      compareRef: String(form.get("compareRef") ?? "") || undefined,
+      intent: String(form.get("intent") ?? ""),
+    });
+  }
+
   return (
     <div className="page page--narrow">
       <section className="hero-block" aria-labelledby="new-run-title">
         <p className="eyebrow">RELEASE READINESS / NEW RUN</p>
         <h1 id="new-run-title">Put evidence between<br />code complete and ship.</h1>
         <p className="lede">Foreman reconstructs intent, verifies behavior in isolation, investigates risk, repairs bounded defects, and stops when judgment belongs to a human.</p>
+        <div className="hero-actions"><button className="sk-button" type="button" disabled={pending} onClick={() => void startRun({ demo: true })}>{pending ? "Starting Foreman…" : "Run golden demo →"}</button><a className="sk-button sk-button--secondary" href="/preview">Inspect static preview</a></div>
+        {error && <p className="form-error" role="alert">{error}</p>}
       </section>
 
       <form className="run-form" onSubmit={submit}>
@@ -41,7 +47,7 @@ export function NewRun() {
         <label className="field field--wide">
           <span>Repository path</span>
           <input name="repository" type="text" required placeholder="/workspace/payment-service" autoComplete="off" />
-          <small>Local paths are evaluated directly. Remote adapters can resolve provider URLs.</small>
+          <small>This build evaluates local paths. Hosted provider adapters belong at the intake boundary.</small>
         </label>
         <div className="field-row">
           <label className="field"><span>Change ref</span><input name="ref" type="text" required placeholder="feature/bounded-retries" autoComplete="off" /></label>
@@ -57,17 +63,11 @@ export function NewRun() {
           <textarea name="intent" required rows={5} placeholder="Add bounded retry support to failed payment captures without changing existing payment policy." />
         </label>
 
-        {error && <div className="sk-alert" data-variant="danger" role="alert"><strong>Unable to start</strong><p>{error}</p></div>}
         <div className="form-actions">
           <p><b>Authority:</b> read repository, execute isolated checks, bounded repair branch. Never production.</p>
           <button className="sk-button" type="submit" disabled={pending}>{pending ? "Starting Foreman…" : "Start release assessment →"}</button>
         </div>
       </form>
-
-      <aside className="preview-callout" aria-label="Product preview">
-        <div><p className="eyebrow">NO BACKEND AVAILABLE?</p><h2>Walk through the decision surface.</h2><p>The product tour is a labeled static preview fixture. It does not claim to execute a release assessment.</p></div>
-        <a className="sk-button sk-button--secondary" href="/preview">Open preview fixture</a>
-      </aside>
     </div>
   );
 }

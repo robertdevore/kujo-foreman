@@ -3,16 +3,18 @@
 An agent should not receive “a computer.” It should receive the smallest set of
 named operations required for its job.
 
-Foreman uses Kujo Ability as that semantic layer. An Ability has a stable ID,
-input and output schemas, declared effects, idempotency rules, and receipt
-semantics. Those definitions project into Strands tools through MCP or a local
-binding without changing what the operation means.
+Foreman uses Kujo Ability's contract as that semantic layer. Each checked-in
+capability has a stable ID, input and output schemas, declared effects, and
+idempotency rules. The current Strands bridge calls those capabilities through
+a local, argument-safe Kujo process binding. MCP remains a compatible future
+transport, not a claimed call on the demo path.
 
 Profiles make the boundary visible. The Change Analyst can read repository and
-Git data, but cannot write. Verification can run allowlisted checks inside a
-Workcell, but cannot mutate production. Repair can write only to an isolated
-worktree within file, line, time, and iteration bounds. The release judge can
-read evidence and nothing else.
+Git data, but cannot write. Verification runs allowlisted checks in the labeled
+managed workspace and cannot mutate production. Repair can write only within
+file, line, time, and iteration bounds. The release judge can read evidence and
+nothing else. The production repository-intake contract binds execution to
+Workcell.
 
 Effect declarations are not a sandbox. This distinction matters. Ability says
 that an operation writes a worktree or starts an external process. Workcell
@@ -28,4 +30,3 @@ semantic choice, but cannot override containment.
 This design is less magical than a general shell tool. That is the point.
 Professional autonomy becomes credible when every useful power has a name, an
 effect, an owner, and evidence.
-

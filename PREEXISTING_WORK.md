@@ -7,7 +7,12 @@ The broader Kujo ecosystem predates this hackathon. Foreman consumes those
 projects as independently versioned infrastructure; they are not represented
 as hackathon-created code.
 
-## Pre-existing Kujo projects used
+## Pre-existing Kujo projects referenced or integrated
+
+Foreman directly runs Kujo 1.4 and vendors SiteKit. It adopts compatible
+contract semantics from Ability, Spec, Eval, and Workcell. The other projects
+below are audited adapter targets, not hidden dependencies or claimed calls on
+the golden runtime path.
 
 | Project | Pre-existing role | How Foreman consumes it |
 | --- | --- | --- |
@@ -41,4 +46,3 @@ architecture, threat model, and submission material.
 No source code was copied from a pre-existing Kujo repository. Where interface
 shapes are compatible with Kujo contracts, that reuse is identified in source
 and documentation.
-
