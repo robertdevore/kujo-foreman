@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Kujo Foreman architecture</title>
+  <desc id="desc">A Strands graph on AgentCore coordinates specialist agents. Kujo Ability provides bounded capabilities, Workcell is the production execution binding, and a deterministic Kujo judge creates release evidence or a human escalation.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f4f1e8}.panel{fill:#fff;stroke:#111;stroke-width:2}.ink{fill:#111}.muted{fill:#5b5b55}.green{fill:#007a55}.amber{fill:#b45f00}.cyan{fill:#007e96}.red{fill:#a32222}.line{fill:none;stroke:#111;stroke-width:2}.dash{fill:none;stroke:#666;stroke-width:2;stroke-dasharray:8 7}.title{font:700 34px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:2px}.h{font:700 18px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1px}.t{font:15px system-ui,sans-serif}.m{font:13px ui-monospace,SFMono-Regular,Menlo,monospace}.white{fill:#fff}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" class="ink"/></marker>
+  </defs>
+  <rect width="1600" height="900" class="bg"/>
+  <text x="70" y="62" class="title ink">KUJO FOREMAN</text>
+  <text x="70" y="92" class="m muted">AI WRITES CODE. FOREMAN DECIDES WHETHER IT SHIPS.</text>
+  <rect x="70" y="125" width="1460" height="74" class="panel"/>
+  <text x="98" y="155" class="h ink">TRIGGER + PRODUCT SURFACE</text>
+  <text x="98" y="181" class="t muted">Git range · CLI · focused web UI · API · live SSE events · stop / approve / reject</text>
+
+  <path d="M800 199 V235" class="line" marker-end="url(#arrow)"/>
+  <rect x="70" y="240" width="1460" height="250" class="panel"/>
+  <rect x="70" y="240" width="1460" height="48" class="ink"/>
+  <text x="96" y="271" class="h white">AMAZON BEDROCK AGENTCORE RUNTIME · STRANDS TYPESCRIPT GRAPH</text>
+
+  <rect x="98" y="315" width="200" height="72" class="panel"/>
+  <text x="118" y="345" class="h ink">CHANGE</text><text x="118" y="370" class="t muted">diff + impact</text>
+  <rect x="350" y="315" width="200" height="72" class="panel"/>
+  <text x="370" y="345" class="h ink">SPEC</text><text x="370" y="370" class="t muted">criteria + unknowns</text>
+  <rect x="615" y="315" width="200" height="72" class="panel"/>
+  <text x="635" y="345" class="h ink">VERIFY</text><text x="635" y="370" class="t muted">parallel gates</text>
+  <rect x="615" y="408" width="200" height="58" class="panel"/>
+  <text x="635" y="438" class="h ink">RISK</text>
+  <rect x="880" y="348" width="220" height="88" class="panel"/>
+  <text x="900" y="378" class="h ink">AND BARRIER</text><text x="900" y="404" class="t muted">shared typed state</text>
+  <rect x="1165" y="315" width="300" height="150" class="panel"/>
+  <text x="1186" y="345" class="h ink">CONDITIONAL ROUTING</text>
+  <text x="1186" y="375" class="m green">PASS → RELEASE</text>
+  <text x="1186" y="402" class="m cyan">REPAIR → RE-EVALUATE ×2</text>
+  <text x="1186" y="429" class="m amber">ESCALATE → HUMAN</text>
+  <path d="M298 351 H350" class="line" marker-end="url(#arrow)"/><path d="M550 351 H615" class="line" marker-end="url(#arrow)"/>
+  <path d="M550 366 C575 366 580 437 615 437" class="line" marker-end="url(#arrow)"/>
+  <path d="M815 351 C845 351 850 375 880 375" class="line" marker-end="url(#arrow)"/>
+  <path d="M815 437 C845 437 850 409 880 409" class="line" marker-end="url(#arrow)"/>
+  <path d="M1100 392 H1165" class="line" marker-end="url(#arrow)"/>
+
+  <path d="M800 490 V528" class="line" marker-end="url(#arrow)"/>
+  <rect x="70" y="535" width="1460" height="195" class="panel"/>
+  <text x="96" y="570" class="h ink">KUJO EXECUTION, CONTROL, VERIFICATION, AND EVIDENCE</text>
+  <rect x="98" y="592" width="315" height="105" class="panel"/>
+  <text x="118" y="622" class="h ink">ABILITY / MCP</text>
+  <text x="118" y="649" class="t muted">identity · schema · effects</text><text x="118" y="674" class="t muted">approval · idempotency · receipt</text>
+  <rect x="455" y="592" width="315" height="105" class="panel"/>
+  <text x="475" y="622" class="h ink">WORKCELL · PRODUCTION</text>
+  <text x="475" y="649" class="t muted">validated container binding</text><text x="475" y="674" class="t muted">bounded CPU / network / output</text>
+  <rect x="812" y="592" width="315" height="105" class="panel"/>
+  <text x="832" y="622" class="h ink">DETERMINISTIC TOOLS</text>
+  <text x="832" y="649" class="t muted">Spec · Eval · Fence · ShipCheck</text><text x="832" y="674" class="t muted">Scout · PatchBrief · RunLedger</text>
+  <rect x="1170" y="592" width="295" height="105" class="panel"/>
+  <text x="1190" y="622" class="h ink">KUJO RELEASE JUDGE</text>
+  <text x="1190" y="649" class="t muted">fail closed · no write access</text><text x="1190" y="674" class="t muted">evidence completeness barrier</text>
+  <path d="M413 645 H455" class="line" marker-end="url(#arrow)"/><path d="M770 645 H812" class="line" marker-end="url(#arrow)"/><path d="M1127 645 H1170" class="line" marker-end="url(#arrow)"/>
+
+  <path d="M1317 697 V765" class="line" marker-end="url(#arrow)"/>
+  <rect x="70" y="770" width="650" height="82" class="panel"/>
+  <text x="94" y="803" class="h ink">OBSERVABILITY</text>
+  <text x="94" y="830" class="t muted">Strands OTEL · AgentCore / CloudWatch · Watchdog metadata · no chain-of-thought</text>
+  <rect x="775" y="770" width="755" height="82" class="panel"/>
+  <text x="799" y="803" class="h ink">RELEASE EVIDENCE OR ONE PRECISE HUMAN DECISION</text>
+  <text x="799" y="830" class="t muted">checksummed artifacts · provenance · repairs · risks · exact disposition</text>
+  <path d="M1170 687 C1050 735 610 735 520 770" class="dash" marker-end="url(#arrow)"/>
+</svg>

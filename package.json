@@ -1,0 +1,19 @@
+{
+  "name": "kujo-foreman",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "npm --prefix strands-bridge run build && npm --prefix apps/web run build",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "dev": "npm --prefix strands-bridge run dev",
+    "dev:web": "npm --prefix apps/web run dev",
+    "install:all": "npm --prefix strands-bridge ci && npm --prefix apps/web ci",
+    "lint": "npm --prefix apps/web run lint",
+    "test": "npm --prefix strands-bridge test && npm --prefix apps/web run test",
+    "test:kujo": "kujo test -v",
+    "typecheck": "npm --prefix strands-bridge run typecheck && npm --prefix apps/web run typecheck"
+  }
+}
