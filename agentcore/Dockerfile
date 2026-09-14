@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim AS kujo-runtime
+FROM public.ecr.aws/docker/library/ubuntu:24.04 AS kujo-runtime
 ARG KUJO_VERSION=1.4.0
 ARG TARGETARCH
 ARG KUJO_SHA256_AMD64=49a4803b70b51a5d6cba04b5aba2bbe8786d19ec15861c18b67c3bac8670233c
@@ -14,7 +14,7 @@ RUN apt-get update \
     && echo "${kujo_sha}  /tmp/kujo.tar.gz" | sha256sum -c - \
     && tar -xzf /tmp/kujo.tar.gz -C /usr/local/bin
 
-FROM node:22-bookworm-slim AS bridge
+FROM public.ecr.aws/docker/library/node:22-bookworm-slim AS bridge
 WORKDIR /app/strands-bridge
 COPY strands-bridge/package*.json ./
 RUN npm ci
@@ -22,7 +22,7 @@ COPY strands-bridge/tsconfig.json ./
 COPY strands-bridge/src ./src
 RUN npm run build && npm prune --omit=dev
 
-FROM debian:bookworm-slim
+FROM public.ecr.aws/docker/library/ubuntu:24.04
 RUN useradd --create-home --uid 10001 foreman \
     && apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git \

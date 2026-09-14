@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { ForemanService } from "./service.js";
 import { RunStore } from "./store.js";
-import type { ForemanEvent, StartRunRequest } from "./contracts.js";
+import type { AgentCoreInvocationRequest, ForemanEvent, ForemanRun, StartRunRequest } from "./contracts.js";
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 const defaultProjectRoot = path.resolve(moduleDir, "../..");
@@ -22,7 +22,17 @@ export function createApp(options: { projectRoot?: string; stateRoot?: string; m
   app.get("/ping", (_req, res) => res.json({ status: "Healthy" }));
   app.post("/invocations", asyncRoute(async (req, res) => {
     const sessionId = req.header("x-amzn-bedrock-agentcore-runtime-session-id");
-    const run = await service.create(req.body as StartRunRequest);
+    const input = (req.body ?? {}) as AgentCoreInvocationRequest;
+    let run: ForemanRun;
+    if (input.action === "get") {
+      if (!input.runId) throw new Error("runId is required for get");
+      run = await store.load(input.runId);
+    } else if (input.action === "decide") {
+      if (!input.runId || !input.decisionId || !input.optionId) throw new Error("runId, decisionId, and optionId are required for decide");
+      run = await service.decide(input.runId, input.decisionId, input.optionId);
+    } else {
+      run = await service.create(input);
+    }
     if (sessionId) res.setHeader("x-amzn-bedrock-agentcore-runtime-session-id", sessionId);
     res.status(200).json({ runId: run.id, status: run.status, sessionId: sessionId ?? null, run });
   }));
@@ -42,11 +52,11 @@ export function createApp(options: { projectRoot?: string; stateRoot?: string; m
     const heartbeat = setInterval(() => res.write(": heartbeat\n\n"), 15_000);
     req.on("close", () => { clearInterval(heartbeat); unsubscribe(); });
   }));
-  app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => { const message = error instanceof Error ? error.message : "unexpected error"; const missing = (error as NodeJS.ErrnoException)?.code === "ENOENT" || message.includes("not found"); res.status(missing ? 404 : 400).json({ error: message }); });
+  app.use((error: unknown, req: Request, res: Response, _next: NextFunction) => { const message = error instanceof Error ? error.message : "unexpected error"; const missing = (error as NodeJS.ErrnoException)?.code === "ENOENT" || message.includes("not found"); process.stderr.write(`Foreman request failed: ${req.method} ${req.path}: ${message}\n`); res.status(missing ? 404 : 400).json({ error: message }); });
   return { app, service, store };
 }
 
 if (process.env.NODE_ENV !== "test") {
   const port = Number(process.env.PORT ?? 8787); const { app } = createApp();
-  app.listen(port, () => process.stdout.write(`Kujo Foreman bridge listening on http://127.0.0.1:${port}\n`));
+  app.listen(port, "0.0.0.0", () => process.stdout.write(`Kujo Foreman bridge listening on http://0.0.0.0:${port}\n`));
 }

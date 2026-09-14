@@ -38,7 +38,7 @@ describe("native Strands graph", () => {
   });
 
   it("uses actual Strands Agent nodes only in Bedrock mode", () => {
-    const offline = buildForemanGraph("offline"); const bedrock = buildForemanGraph("bedrock", "global.anthropic.claude-sonnet-4-6");
+    const offline = buildForemanGraph("offline"); const bedrock = buildForemanGraph("bedrock", "amazon.nova-pro-v1:0");
     expect([...offline.nodes.values()].every((node) => node.type === "agentNode")).toBe(true);
     expect([...bedrock.nodes.values()].filter((node) => ["intake", "change_analysis", "specification", "verification", "risk_analysis"].includes(node.id)).map((node) => (node as { agent?: { constructor: { name: string } } }).agent?.constructor.name).every((name) => name === "Agent")).toBe(true);
     expect((bedrock.nodes.get("release_decision") as { agent?: { constructor: { name: string } } }).agent?.constructor.name).toBe("KujoInvokableAgent");

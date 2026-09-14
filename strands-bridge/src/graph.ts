@@ -64,7 +64,7 @@ function bedrockAgent(definition: typeof definitions[number], modelId: string): 
   });
 }
 
-export function buildForemanGraph(mode: Mode, modelId = process.env.FOREMAN_BEDROCK_MODEL ?? "global.anthropic.claude-sonnet-4-6"): Graph {
+export function buildForemanGraph(mode: Mode, modelId = process.env.FOREMAN_BEDROCK_MODEL ?? "amazon.nova-pro-v1:0"): Graph {
   const deterministicControlNode = (id: string) => id.startsWith("repair_") || id.startsWith("re_evaluate_") || id.startsWith("release_decision");
   const nodes = definitions.map((definition) => mode === "bedrock" && !deterministicControlNode(definition.id) ? bedrockAgent(definition, modelId) : new KujoInvokableAgent(definition.id, definition.description, definition.action));
   const eligible = (state: MultiAgentState, nodeId: string) => {

@@ -3,6 +3,10 @@
 .venv
 **/node_modules
 **/dist
+agentcore/cdk/cdk.out
+agentcore/cdk/cdk.out/**
+agentcore/.cli
+agentcore/.cli/**
 .eval-results
 artifacts/runs/*
 demo/workspace

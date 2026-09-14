@@ -1,5 +1,6 @@
 {
   "app": "node dist/bin/cdk.js",
+  "output": "../../../.kujo-foreman-cdk.out",
   "watch": {
     "include": ["**"],
     "exclude": ["README.md", "cdk*.json", "tsconfig.json", "package*.json", "yarn.lock", "node_modules", "dist", "test"]

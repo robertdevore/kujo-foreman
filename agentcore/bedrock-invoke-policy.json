@@ -9,8 +9,7 @@
         "bedrock:InvokeModelWithResponseStream"
       ],
       "Resource": [
-        "arn:aws:bedrock:*::foundation-model/anthropic.claude-*",
-        "arn:aws:bedrock:*:*:inference-profile/global.anthropic.claude-*"
+        "arn:aws:bedrock:*::foundation-model/amazon.nova-pro-v1:0"
       ]
     }
   ]

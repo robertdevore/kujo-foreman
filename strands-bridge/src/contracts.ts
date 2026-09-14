@@ -25,6 +25,7 @@ export type ForemanEvent =
 export type ForemanEventInput = ForemanEvent extends infer Event ? Event extends ForemanEvent ? Omit<Event, "sequence"> : never : never;
 
 export interface StartRunRequest { repository?: string; ref?: string; compareRef?: string; intent?: string; demo?: boolean }
+export interface AgentCoreInvocationRequest extends StartRunRequest { action?: "start" | "get" | "decide"; runId?: string; decisionId?: string; optionId?: string }
 
 export const stageOrder: StageId[] = ["intake", "change_analysis", "specification", "verification", "risk_analysis", "release_decision"];
 export const stageLabels: Record<StageId, string> = { intake: "Intake", change_analysis: "Change analysis", specification: "Specification", verification: "Verification", risk_analysis: "Risk analysis", release_decision: "Release decision" };

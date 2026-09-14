@@ -10,7 +10,7 @@ Every capability call is checked against Kujo's role policy before execution. Re
 npm install
 FOREMAN_MODE=offline npm start
 # production path
-AWS_REGION=us-east-1 FOREMAN_MODE=bedrock FOREMAN_BEDROCK_MODEL=global.anthropic.claude-sonnet-4-6 npm start
+AWS_REGION=us-east-1 FOREMAN_MODE=bedrock FOREMAN_BEDROCK_MODEL=amazon.nova-pro-v1:0 npm start
 ```
 
 `KUJO_BIN` may point to a Kujo executable. Processes are always spawned as executable-plus-argv with `shell: false`. State, replayable event logs, and Kujo evidence packages are kept under `../.foreman/`. The SSE endpoint honors `Last-Event-ID`; no progress event is timer-simulated.

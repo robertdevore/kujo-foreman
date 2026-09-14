@@ -44,6 +44,9 @@ export class KujoCli {
     const setup = path.join(this.root, "demo", "setup.kujo");
     await access(setup);
     const result = await spawnArgv(this.executable, ["run", "demo/setup.kujo", "--", "--target", target], { cwd: this.root, signal });
-    if (result.exitCode !== 0) throw new KujoProcessError("Kujo demo setup failed", result);
+    if (result.exitCode !== 0) {
+      const detail = (result.stderr.trim() || result.stdout.trim() || "no process output").slice(0, 2_000);
+      throw new KujoProcessError(`Kujo demo setup failed: ${detail}`, result);
+    }
   }
 }

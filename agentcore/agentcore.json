@@ -34,7 +34,7 @@
         },
         {
           "name": "FOREMAN_BEDROCK_MODEL",
-          "value": "global.anthropic.claude-sonnet-4-6"
+          "value": "amazon.nova-pro-v1:0"
         },
         {
           "name": "FOREMAN_STATE_ROOT",
