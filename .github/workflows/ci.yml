@@ -25,12 +25,13 @@ jobs:
           cache-dependency-path: |
             apps/web/package-lock.json
             strands-bridge/package-lock.json
-      - name: Build pinned Kujo runtime
+      - name: Install verified Kujo runtime
         run: |
-          git clone https://github.com/kujolang/kujo.git "$RUNNER_TEMP/kujo"
-          git -C "$RUNNER_TEMP/kujo" checkout 1395f49ff794707380728df3b80ed363788461c0
-          cargo build --locked --release --manifest-path "$RUNNER_TEMP/kujo/Cargo.toml"
-          echo "$RUNNER_TEMP/kujo/target/release" >> "$GITHUB_PATH"
+          curl -fsSLo "$RUNNER_TEMP/kujo.tar.gz" https://github.com/kujolang/kujo/releases/download/v1.4.0/kujo-v1.4.0-linux-x64.tar.gz
+          echo "49a4803b70b51a5d6cba04b5aba2bbe8786d19ec15861c18b67c3bac8670233c  $RUNNER_TEMP/kujo.tar.gz" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/kujo-bin"
+          tar -xzf "$RUNNER_TEMP/kujo.tar.gz" -C "$RUNNER_TEMP/kujo-bin"
+          echo "$RUNNER_TEMP/kujo-bin" >> "$GITHUB_PATH"
       - name: Install JavaScript dependencies
         run: npm run install:all
       - name: Verify Kujo contracts

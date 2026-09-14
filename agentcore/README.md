@@ -12,8 +12,9 @@ AgentCore Runtime. No deployment is claimed merely because these files exist.
 
 Set `FOREMAN_MODE=bedrock` and `FOREMAN_BEDROCK_MODEL` for the deployed runtime. Build
 and push the image through the current AgentCore CLI or AWS console workflow,
-then configure the container port as `8080`. The multi-stage image builds the
-pinned Kujo commit itself. The service contract is:
+then configure the container port as `8080`. The multi-stage image downloads
+the pinned Kujo 1.4.0 release and verifies its published SHA-256 before use.
+The service contract is:
 
 - `GET /ping` — health/readiness
 - `POST /invocations` — AgentCore invocation entry point
