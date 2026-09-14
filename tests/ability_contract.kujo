@@ -1,0 +1,22 @@
+catalog := parse_json(read_file("abilities/catalog.json"))
+assert(type(catalog) == "array" && len(catalog) == 5, "Foreman must expose five domain Abilities")
+
+ids := {}
+i := 0
+while i < len(catalog) {
+    ability := catalog[i]
+    assert(ability["schema"] == "kujo.ability/v1", "Ability schema must be canonical")
+    assert(starts_with(ability["id"], "kujo.foreman."), "Foreman Ability IDs must be namespaced")
+    assert(type(ability["effects"]) == "array" && len(ability["effects"]) > 0, "every Ability declares effects")
+    assert(!has_key(ids, ability["id"]), "Ability IDs must be unique")
+    ids[ability["id"]] := true
+    i = i + 1
+}
+
+profiles := parse_json(read_file("abilities/profiles.json"))["profiles"]
+assert(len(profiles["change-analyst"]) == 3, "change analyst gets a narrow read profile")
+assert(len(profiles["release-judge"]) == 1, "release judge gets exactly one read-only Ability")
+assert(contains(profiles["repair"][0], "repair"), "repair profile exposes the bounded repair Ability")
+
+print("ability catalog contract: passed")
+

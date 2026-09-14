@@ -1,0 +1,37 @@
+from src.common import safe_process, process_ok
+
+func option(argv, name, fallback) {
+    i := 0
+    while i < len(argv) {
+        if argv[i] == name && i + 1 < len(argv) { return argv[i + 1] }
+        i = i + 1
+    }
+    return fallback
+}
+
+func copy_tree(source, target) {
+    result := safe_process(["cp", "-R", source + "/.", target], {"timeout_ms": 10000, "max_output_bytes": 10000})
+    assert(process_ok(result), "fixture copy must succeed")
+}
+
+argv := args()
+target := option(argv, "--target", "demo/workspace/payment-retry")
+root := os_getcwd()
+fixture := root + "/demo/fixture"
+
+safe_process(["rm", "-rf", target], {"timeout_ms": 10000, "max_output_bytes": 10000})
+mkdir_result := safe_process(["mkdir", "-p", target], {"timeout_ms": 10000, "max_output_bytes": 10000})
+assert(process_ok(mkdir_result), "workspace must create: " + to_json(mkdir_result))
+assert(process_ok(safe_process(["git", "-C", target, "init", "-q", "-b", "main"], {"timeout_ms": 10000, "max_output_bytes": 10000})), "git init must succeed")
+safe_process(["git", "-C", target, "config", "user.email", "foreman-demo@kujolang.ai"], {"timeout_ms": 5000, "max_output_bytes": 1000})
+safe_process(["git", "-C", target, "config", "user.name", "Kujo Foreman Demo"], {"timeout_ms": 5000, "max_output_bytes": 1000})
+
+copy_tree(fixture + "/base", target)
+safe_process(["git", "-C", target, "add", "."], {"timeout_ms": 5000, "max_output_bytes": 1000})
+assert(process_ok(safe_process(["git", "-C", target, "commit", "-qm", "baseline: preserve three payment attempts"], {"timeout_ms": 10000, "max_output_bytes": 10000})), "base commit must succeed")
+
+copy_tree(fixture + "/candidate", target)
+safe_process(["git", "-C", target, "add", "."], {"timeout_ms": 5000, "max_output_bytes": 1000})
+assert(process_ok(safe_process(["git", "-C", target, "commit", "-qm", "feat: configurable payment capture retries"], {"timeout_ms": 10000, "max_output_bytes": 10000})), "candidate commit must succeed")
+
+print(to_json({"ok": true, "repository": path_absolute(target), "base_ref": "HEAD~1", "head_ref": "HEAD", "intent": "Add provider-configurable payment capture retries without changing the authorized production default."}))

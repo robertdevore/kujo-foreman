@@ -1,0 +1,3 @@
+[KUJORUN001] [runtime] Runtime Error: Invalid unary operation: ! int
+  --> 0:0
+   = help: Use a value type supported by this unary operator, or convert the value first.

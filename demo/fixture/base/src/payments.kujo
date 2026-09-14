@@ -1,0 +1,16 @@
+DEFAULT_RETRIES := 3
+
+export func default_retries() {
+    return DEFAULT_RETRIES
+}
+
+export func retry_attempts(max_attempts) {
+    attempts := []
+    i := 1
+    while i <= max_attempts {
+        attempts = push(attempts, i)
+        i = i + 1
+    }
+    return attempts
+}
+

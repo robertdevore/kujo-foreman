@@ -1,0 +1,6 @@
+from src.payments import retry_attempts, retry_policy
+
+assert(len(retry_attempts(2)) == 2, "explicit retry count is honored")
+assert(retry_policy("sandbox", 2)["max_attempts"] == 2, "provider policy accepts explicit attempts")
+print("payment contract: passed")
+

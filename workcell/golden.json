@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "name": "kujo-foreman-golden",
+  "runtime": {
+    "backend": "docker",
+    "image": "kujolang/workcell-kujo:local",
+    "build_context": ""
+  },
+  "workspace": {
+    "strategy": "git-worktree",
+    "mount_path": "/workspace",
+    "run_as": "host"
+  },
+  "command": ["sh", "-lc", "kujo check main.kujo && kujo test -v"],
+  "environment": {"allow": [], "set": {}},
+  "secrets": [],
+  "resources": {
+    "cpus": 2,
+    "memory": "1g",
+    "pids": 128,
+    "timeout_ms": 120000,
+    "max_output_bytes": 1000000
+  },
+  "network": {"mode": "none"},
+  "filesystem": {"read_only_root": true, "tmpfs": ["/tmp"]},
+  "artifacts": {
+    "export": [],
+    "max_bytes": 1048576,
+    "max_files": 20,
+    "max_depth": 6,
+    "secret_action": "reject"
+  },
+  "verification": {
+    "version": 1,
+    "commands": [
+      {"name": "kujo-check", "command": ["kujo", "check", "main.kujo"]},
+      {"name": "kujo-tests", "command": ["kujo", "test", "-v"]}
+    ]
+  },
+  "cleanup": {"keep_failed": true},
+  "trust_profile": "contained-standard",
+  "receipt": {"path": ".workcell/runs"}
+}

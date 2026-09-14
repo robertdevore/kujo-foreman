@@ -1,0 +1,25 @@
+from src.model import new_run, artifact
+from src.judge import decide
+from src.evidence import write_package, verify_package
+from src.common import safe_process
+
+root := env_or("TMPDIR", "/tmp") + "/kujo-foreman-evidence-contract"
+safe_process(["rm", "-rf", root], {"timeout_ms": 5000, "max_output_bytes": 1000})
+
+run := new_run(".", "HEAD~1", "HEAD", "test evidence", {"max_repair_files": 3})
+run["verification_results"] := [{"id": "tests", "name": "tests", "required": true, "status": "passed"}]
+run["evidence"] := [artifact("verification", "verification", "complete", {"passed": true}, "test")]
+run["release_decision"] := decide(run)
+
+written := write_package(run, root)
+assert(written["ok"], "evidence package should write")
+verified := verify_package(written["path"])
+assert(verified["ok"], "fresh evidence package should verify")
+assert(verified["checked"] == 7, "manifest should cover seven evidence files")
+
+write_file_atomic(written["path"] + "/decision.json", "{}\n", true)
+tampered := verify_package(written["path"])
+assert(!tampered["ok"], "tampered evidence must fail verification")
+
+safe_process(["rm", "-rf", root], {"timeout_ms": 5000, "max_output_bytes": 1000})
+print("evidence integrity contract: passed")

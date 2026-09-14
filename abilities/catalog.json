@@ -1,0 +1,57 @@
+[
+  {
+    "schema": "kujo.ability/v1",
+    "id": "kujo.foreman.change.analyze",
+    "version": "1.0.0",
+    "title": "Analyze a Git change set",
+    "description": "Produce structured change intelligence from a bounded local Git range while treating repository text as untrusted data.",
+    "input_schema": {"type":"object","required":["repository","base_ref","head_ref"],"properties":{"repository":{"type":"string","minLength":1,"maxLength":4096},"base_ref":{"type":"string","minLength":1,"maxLength":512},"head_ref":{"type":"string","minLength":1,"maxLength":512}},"additionalProperties":false},
+    "output_schema": {"type":"object","required":["ok"],"properties":{"ok":{"type":"boolean"}},"additionalProperties":true},
+    "effects": [{"kind":"read","resource":"kujo.repository.git"}],
+    "idempotency": {"mode":"intrinsic"}
+  },
+  {
+    "schema": "kujo.ability/v1",
+    "id": "kujo.foreman.verification.plan",
+    "version": "1.0.0",
+    "title": "Plan repository verification",
+    "description": "Discover allowlisted deterministic checks from repository-owned manifests without executing them.",
+    "input_schema": {"type":"object","required":["repository"],"properties":{"repository":{"type":"string","minLength":1,"maxLength":4096}},"additionalProperties":false},
+    "output_schema": {"type":"object","required":["ok","checks"],"properties":{"ok":{"type":"boolean"},"checks":{"type":"array"}},"additionalProperties":true},
+    "effects": [{"kind":"read","resource":"kujo.repository.files"}],
+    "idempotency": {"mode":"intrinsic"}
+  },
+  {
+    "schema": "kujo.ability/v1",
+    "id": "kujo.foreman.verification.execute",
+    "version": "1.0.0",
+    "title": "Execute a verification check",
+    "description": "Execute one allowlisted verification command and report its executor and receipt. Production binds this Ability to Workcell; local mode is explicit.",
+    "input_schema": {"type":"object","required":["repository","check_id"],"properties":{"repository":{"type":"string","minLength":1,"maxLength":4096},"check_id":{"type":"string","minLength":1,"maxLength":128},"idempotency_key":{"type":"string","minLength":16,"maxLength":256}},"additionalProperties":false},
+    "output_schema": {"type":"object","required":["status","receipt"],"properties":{"status":{"type":"string","enum":["passed","failed","blocked"]},"receipt":{"type":"object"}},"additionalProperties":true},
+    "effects": [{"kind":"external","resource":"kujo.verification.process"},{"kind":"write","resource":"kujo.foreman.evidence"}],
+    "idempotency": {"mode":"keyed"}
+  },
+  {
+    "schema": "kujo.ability/v1",
+    "id": "kujo.foreman.repair.apply-bounded",
+    "version": "1.0.0",
+    "title": "Apply a bounded repair",
+    "description": "Apply an exact digest-bound deterministic replacement inside an isolated worktree after fail-closed policy evaluation.",
+    "input_schema": {"type":"object","required":["repository","proposal","idempotency_key"],"properties":{"repository":{"type":"string","minLength":1,"maxLength":4096},"proposal":{"type":"object"},"approval":{"type":"object"},"idempotency_key":{"type":"string","minLength":16,"maxLength":256}},"additionalProperties":false},
+    "output_schema": {"type":"object","required":["ok"],"properties":{"ok":{"type":"boolean"}},"additionalProperties":true},
+    "effects": [{"kind":"write","resource":"kujo.repository.worktree"}],
+    "idempotency": {"mode":"keyed"}
+  },
+  {
+    "schema": "kujo.ability/v1",
+    "id": "kujo.foreman.release.judge",
+    "version": "1.0.0",
+    "title": "Judge release readiness",
+    "description": "Apply deterministic fail-closed release semantics to typed evidence without source mutation authority.",
+    "input_schema": {"type":"object","required":["run"],"properties":{"run":{"type":"object"}},"additionalProperties":false},
+    "output_schema": {"type":"object","required":["disposition","evidence_complete","blockers"],"properties":{"disposition":{"type":"string","enum":["READY_TO_SHIP","READY_WITH_NOTES","BLOCKED","HUMAN_DECISION_REQUIRED"]},"evidence_complete":{"type":"boolean"},"blockers":{"type":"array"}},"additionalProperties":true},
+    "effects": [{"kind":"read","resource":"kujo.foreman.evidence"}],
+    "idempotency": {"mode":"intrinsic"}
+  }
+]

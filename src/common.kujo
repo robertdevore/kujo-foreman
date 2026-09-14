@@ -1,0 +1,121 @@
+export func get_or(value, key, fallback) {
+    if type(value) != "dict" { return fallback }
+    try {
+        if has_key(value, key) { return value[key] }
+    } except err {}
+    return fallback
+}
+
+export func text(value, fallback) {
+    if value == null { return fallback }
+    rendered := trim(to_string(value))
+    if rendered == "" { return fallback }
+    return rendered
+}
+
+export func truthy(value) {
+    if type(value) == "bool" { return value }
+    if type(value) == "int" { return value != 0 }
+    if type(value) == "string" {
+        normalized := to_lower(trim(value))
+        return normalized == "true" || normalized == "1" || normalized == "yes"
+    }
+    return false
+}
+
+export func safe_process(argv, options) {
+    try {
+        raw := spawn_process(argv, options)
+        try {
+            return {
+                "success": raw.success,
+                "exitcode": raw.exitcode,
+                "stdout": raw.stdout,
+                "stderr": raw.stderr,
+                "timed_out": raw.timed_out,
+                "stdout_truncated": raw.stdout_truncated,
+                "stderr_truncated": raw.stderr_truncated
+            }
+        } except err {
+            return raw
+        }
+    } except err {
+        return {
+            "success": false,
+            "exitcode": 127,
+            "stdout": "",
+            "stderr": to_string(err),
+            "timed_out": false,
+            "stdout_truncated": false,
+            "stderr_truncated": false
+        }
+    }
+}
+
+export func process_ok(result) {
+    return truthy(get_or(result, "success", false)) && get_or(result, "exitcode", 127) == 0
+}
+
+export func lines(value) {
+    out := []
+    raw := split(text(value, ""), "\n")
+    i := 0
+    while i < len(raw) {
+        item := trim(raw[i])
+        if item != "" { out = push(out, item) }
+        i = i + 1
+    }
+    return out
+}
+
+export func contains_text(value, needle) {
+    return contains(to_lower(text(value, "")), to_lower(needle))
+}
+
+export func stable_id(prefix, seed) {
+    return prefix + "-" + substring(sha256(prefix + ":" + seed), 0, 12)
+}
+
+export func now_ms() {
+    return current_timestamp()
+}
+
+export func ensure_dir(path) {
+    result := safe_process(["mkdir", "-p", path], {"timeout_ms": 5000, "max_output_bytes": 4096})
+    return process_ok(result)
+}
+
+export func write_json(path, value) {
+    try {
+        write_file_atomic(path, to_json_pretty(value) + "\n", true)
+        return {"ok": true, "path": path}
+    } except err {
+        return {"ok": false, "error": to_string(err), "path": path}
+    }
+}
+
+export func read_json(path) {
+    try {
+        return {"ok": true, "value": parse_json(read_file(path))}
+    } except err {
+        return {"ok": false, "error": to_string(err)}
+    }
+}
+
+export func emit_event(run_id, sequence, event_type, actor, stage_id, payload, evidence_ids) {
+    event := {
+        "schema": "foreman.event/v1",
+        "event_id": stable_id("evt", run_id + ":" + to_string(sequence) + ":" + event_type),
+        "run_id": run_id,
+        "sequence": sequence,
+        "emitted_at_ms": now_ms(),
+        "type": event_type,
+        "actor": actor,
+        "stage_id": stage_id,
+        "correlation_id": run_id,
+        "evidence_ids": evidence_ids,
+        "payload": payload
+    }
+    print(to_json(event))
+    return event
+}

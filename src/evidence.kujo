@@ -1,0 +1,74 @@
+from src.common import ensure_dir, write_json, get_or, now_ms
+
+func markdown_summary(run) {
+    decision := get_or(run, "release_decision", {})
+    checks := get_or(run, "verification_results", [])
+    risks := get_or(run, "risk_findings", [])
+    repairs := get_or(run, "repair_attempts", [])
+    decisions := get_or(run, "human_decisions", [])
+    project := get_or(run, "project", {})
+    body := "# Kujo Foreman release evidence\n\n"
+    body = body + "**Disposition:** " + get_or(decision, "disposition", "UNVERIFIED") + "\n\n"
+    body = body + get_or(decision, "reason", "No decision.") + "\n\n"
+    body = body + "## Change\n\n"
+    body = body + "- Repository: `" + get_or(project, "repository", "") + "`\n"
+    body = body + "- Range: `" + get_or(project, "base_ref", "") + ".." + get_or(project, "head_ref", "") + "`\n"
+    body = body + "- Diff digest: `" + get_or(get_or(run, "change_set", {}), "diff_sha256", "") + "`\n\n"
+    body = body + "## Evidence\n\n"
+    body = body + "- Required checks: " + to_string(get_or(get_or(decision, "required_checks", {}), "passed", 0)) + "/" + to_string(get_or(get_or(decision, "required_checks", {}), "total", 0)) + "\n"
+    body = body + "- Verification results: " + to_string(len(checks)) + "\n"
+    body = body + "- Risk findings: " + to_string(len(risks)) + "\n"
+    body = body + "- Autonomous repairs: " + to_string(len(repairs)) + "\n"
+    body = body + "- Human decisions: " + to_string(len(decisions)) + "\n\n"
+    body = body + "Generated from structured evidence. This report does not contain model chain-of-thought.\n"
+    return body
+}
+
+export func write_package(run, output_root) {
+    run_id := get_or(run, "run_id", "unknown")
+    dir := output_root + "/" + run_id
+    if !ensure_dir(dir) { return {"ok": false, "error": "could not create evidence directory", "path": dir} }
+
+    decision_write := write_json(dir + "/decision.json", get_or(run, "release_decision", {}))
+    run_write := write_json(dir + "/run.json", run)
+    verification_write := write_json(dir + "/verification.json", get_or(run, "verification_results", []))
+    risk_write := write_json(dir + "/risk.json", get_or(run, "risk_findings", []))
+    repairs_write := write_json(dir + "/repairs.json", get_or(run, "repair_attempts", []))
+    decisions_write := write_json(dir + "/human-decisions.json", get_or(run, "human_decisions", []))
+    try { write_file_atomic(dir + "/summary.md", markdown_summary(run), true) } except err {
+        return {"ok": false, "error": to_string(err), "path": dir}
+    }
+
+    files := ["decision.json", "run.json", "verification.json", "risk.json", "repairs.json", "human-decisions.json", "summary.md"]
+    entries := []
+    i := 0
+    while i < len(files) {
+        path := dir + "/" + files[i]
+        entries = push(entries, {"path": files[i], "sha256": sha256(read_file(path)), "bytes": len(read_file(path))})
+        i = i + 1
+    }
+    manifest := {"schema": "foreman.evidence-manifest/v1", "run_id": run_id, "created_at_ms": now_ms(), "files": entries}
+    manifest_write := write_json(dir + "/manifest.json", manifest)
+    ok := decision_write["ok"] && run_write["ok"] && verification_write["ok"] && risk_write["ok"] && repairs_write["ok"] && decisions_write["ok"] && manifest_write["ok"]
+    return {"ok": ok, "path": dir, "manifest": manifest}
+}
+
+export func verify_package(dir) {
+    loaded := parse_json(read_file(dir + "/manifest.json"))
+    entries := get_or(loaded, "files", [])
+    failures := []
+    i := 0
+    while i < len(entries) {
+        entry := entries[i]
+        path := dir + "/" + get_or(entry, "path", "")
+        if !path_exists(path) {
+            failures = push(failures, "missing: " + path)
+        } else {
+            actual := sha256(read_file(path))
+            if actual != get_or(entry, "sha256", "") { failures = push(failures, "digest mismatch: " + path) }
+        }
+        i = i + 1
+    }
+    return {"ok": len(failures) == 0, "checked": len(entries), "failures": failures}
+}
+

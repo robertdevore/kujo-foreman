@@ -1,0 +1,22 @@
+DEFAULT_RETRIES := 5
+
+export func default_retries() {
+    return DEFAULT_RETRIES
+}
+
+export func retry_attempts(max_attempts) {
+    attempts := []
+    i := 1
+    while i <= max_attempts {
+        attempts = push(attempts, i)
+        i = i + 1
+    }
+    return attempts
+}
+
+export func retry_policy(provider, configured_attempts) {
+    attempts := configured_attempts
+    if attempts <= 0 { attempts = DEFAULT_RETRIES }
+    return {"provider": provider, "max_attempts": attempts, "schedule": retry_attempts(attempts)}
+}
+

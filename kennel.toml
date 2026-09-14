@@ -1,0 +1,43 @@
+[package]
+name = "kujo-foreman"
+version = "0.1.0"
+description = "Evidence-first autonomous release readiness with Strands Agents and Kujo."
+license = "MIT"
+authors = ["Robert DeVore"]
+repository = "https://github.com/robertdevore/kujo-foreman"
+readme = "README.md"
+keywords = ["kujo", "strands", "agentcore", "release-readiness", "agents"]
+categories = ["ai", "developer-tools"]
+
+[package.status]
+stage = "hackathon"
+stability = "beta"
+public_api = true
+notes = "New AWS Agents for Humans hackathon project; Kujo dependencies predate the submission."
+
+[kujo]
+minimum_version = "1.4.0"
+entry = "main.kujo"
+sources = ["src", "."]
+includes = ["README.md", "LICENSE", "PREEXISTING_WORK.md", "docs", "schemas", "abilities", "demo", "tests"]
+excludes = [".git", ".foreman", ".venv", "node_modules", "dist", "artifacts/runs"]
+
+[dependencies.ability]
+source = "github:kujolang/ability"
+commit = "63d4367d677ce350bb2756dab02603170ca44cee"
+
+[build]
+command = ""
+output = "dist"
+artifacts = []
+
+[scripts]
+test = "kujo test"
+demo = "kujo run demo/setup.kujo -- --target demo/workspace/payment-retry"
+
+[package.exports]
+foreman = "main.kujo"
+policy = "src/policy.kujo"
+judge = "src/judge.kujo"
+evidence = "src/evidence.kujo"
+

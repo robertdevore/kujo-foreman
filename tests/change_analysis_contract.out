@@ -1,0 +1,2 @@
+[KUJORUN001] [runtime] Runtime Error: Cannot write file '/var/folders/wb/0cck3lgd08n55g_8ly9qmf_00000gn/T//kujo-foreman-change-contract/main.kujo': file already exists (pass overwrite=true to replace it)
+  --> 0:0

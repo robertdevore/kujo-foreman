@@ -1,0 +1,64 @@
+name: "Kujo Foreman hackathon release"
+version: "0.1.0"
+goal: >-
+  Build a production-quality autonomous release-readiness agent that produces
+  defensible evidence, applies only bounded low-risk repairs, and escalates
+  decisions that require human judgment.
+priority: "critical"
+scope: >-
+  Kujo runtime with a narrow Strands TypeScript specialist-graph bridge;
+  Kujo capability adapters and least-authority policy; deterministic release
+  judge and evidence package; live event API and focused React product
+  interface; golden demo repository and evaluation scenarios; AgentCore
+  deployment artifacts and submission documentation.
+non_goals:
+  - "A general-purpose coding assistant"
+  - "Automatic production deployment"
+  - "Unbounded autonomous source changes"
+acceptance_criteria:
+  - "A local Git change set can be analyzed end to end"
+  - "Strands Graph visibly coordinates specialist agents and bounded repair routing"
+  - "Final readiness is determined by a fail-closed deterministic evidence gate"
+  - "Independent verification checks execute concurrently in a managed workspace, with a validated Workcell production binding"
+  - "Only allowlisted low-risk repairs can modify the isolated worktree"
+  - "High-consequence ambiguity produces a compact human decision packet"
+  - "The UI streams real run events and exposes authority, evidence, repairs, and decisions"
+  - "Every terminal run writes a checksummed release evidence package"
+  - "Prompt-injection fixtures cannot alter policy or final disposition"
+  - "Unit, integration, graph, policy, evidence, failure-path, and demo tests pass"
+  - "The repository includes every required hackathon submission artifact"
+eval_requirements:
+  - description: "All Kujo contract tests pass"
+    check_type: "command_succeeds"
+    params: {command: "kujo test"}
+  - description: "The Kujo entry point passes static checks"
+    check_type: "command_succeeds"
+    params: {command: "kujo check main.kujo"}
+  - description: "Bridge and UI unit tests pass"
+    check_type: "command_succeeds"
+    params: {command: "npm test"}
+  - description: "Bridge and UI type checks pass"
+    check_type: "command_succeeds"
+    params: {command: "npm run typecheck"}
+  - description: "Bridge and UI production builds pass"
+    check_type: "command_succeeds"
+    params: {command: "npm run build"}
+risks:
+  - risk: "False READY_TO_SHIP is the primary product failure"
+    severity: "critical"
+    mitigation: "The Kujo release judge fails closed on missing, failed, or conflicting evidence."
+  - risk: "Repository content is untrusted and may contain prompt injection"
+    severity: "high"
+    mitigation: "Repository text is quarantined as data and agents receive fixed capabilities."
+  - risk: "Parallel Strands nodes may complete independently"
+    severity: "high"
+    mitigation: "Graph fan-in and an independent Kujo evidence barrier both enforce completeness."
+  - risk: "AgentCore deployment requires external AWS credentials"
+    severity: "medium"
+    mitigation: "Deployment artifacts are complete and deployment is not claimed without a live smoke test."
+human_approval_points:
+  - "Changes to auth, payments, permissions, destructive data behavior, or external policy"
+  - "Any repair outside configured file/line/iteration bounds"
+  - "Production deployment"
+status: "completed"
+tags: ["hackathon", "strands", "agentcore", "kujo", "release-readiness"]

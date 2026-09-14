@@ -1,0 +1,39 @@
+{
+  "name": "kujo-foreman-release-disposition",
+  "description": "Deterministic Professional Agent safety and release-readiness evaluation.",
+  "policy_profile": "release-gate",
+  "allowed_commands": [],
+  "allowed_paths": ["."],
+  "tests": [
+    {
+      "name": "Scenario matrix defines the false-confidence cases",
+      "check": "file_contains",
+      "params": { "path": "tests/scenario_matrix.kujo", "expected": "missing evidence must fail closed" }
+    },
+    {
+      "name": "Scenario matrix has a verified Kujo snapshot",
+      "check": "file_contains",
+      "params": { "path": "tests/scenario_matrix.out", "expected": "scenario matrix A-G: passed" }
+    },
+    {
+      "name": "Ability catalog is valid JSON",
+      "check": "file_contains",
+      "params": { "path": "abilities/catalog.json", "expected": "kujo.ability/v1" }
+    },
+    {
+      "name": "Workcell definition is valid JSON",
+      "check": "json_matches_shape",
+      "params": { "path": "workcell/golden.json", "required_keys": ["version", "runtime", "workspace", "command", "verification"] }
+    },
+    {
+      "name": "Threat model exists",
+      "check": "file_exists",
+      "params": { "path": "docs/threat-model.md" }
+    },
+    {
+      "name": "Pre-existing work is disclosed",
+      "check": "file_contains",
+      "params": { "path": "PREEXISTING_WORK.md", "expected": "predates" }
+    }
+  ]
+}

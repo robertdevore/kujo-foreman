@@ -1,0 +1,6 @@
+from src.payments import default_retries, retry_attempts
+
+assert(default_retries() == 3, "the authorized default is three attempts")
+assert(len(retry_attempts(2)) == 2, "explicit retry count is honored")
+print("payment contract: passed")
+

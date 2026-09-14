@@ -1,0 +1,6 @@
+# Kujo Foreman — evidence-first release readiness.
+
+from src.cli import main
+
+exit(main(args()))
+

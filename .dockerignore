@@ -1,0 +1,8 @@
+.git
+.foreman
+.venv
+**/node_modules
+**/dist
+.eval-results
+artifacts/runs/*
+demo/workspace

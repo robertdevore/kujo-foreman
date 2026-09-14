@@ -1,0 +1,101 @@
+from src.common import get_or, stable_id, now_ms, text
+
+export func new_run(repo, base_ref, head_ref, intent, limits) {
+    seed := path_absolute(repo) + ":" + base_ref + ":" + head_ref + ":" + to_string(now_ms())
+    return {
+        "schema": "foreman.run/v1",
+        "run_id": stable_id("frm", seed),
+        "revision": 1,
+        "last_sequence": 0,
+        "status": "RUNNING",
+        "created_at_ms": now_ms(),
+        "updated_at_ms": now_ms(),
+        "project": {"repository": path_absolute(repo), "base_ref": base_ref, "head_ref": head_ref},
+        "intent": {"source": "operator", "text": intent, "trust": "trusted_instruction"},
+        "change_set": {"files": [], "insertions": 0, "deletions": 0, "diff_sha256": "", "summary": ""},
+        "specification": {"criteria": [], "invariants": [], "prohibited_behaviors": [], "unknowns": []},
+        "verification_plan": [],
+        "verification_results": [],
+        "risk_findings": [],
+        "repair_attempts": [],
+        "human_decisions": [],
+        "evidence": [],
+        "stages": [],
+        "policy": {
+            "profile": "foreman-default-v1",
+            "limits": limits,
+            "source_mutation": "isolated_worktree_only",
+            "production_deploy": "denied"
+        },
+        "release_decision": {
+            "disposition": "UNVERIFIED",
+            "reason": "The release judge has not run.",
+            "evidence_complete": false,
+            "blockers": []
+        }
+    }
+}
+
+export func artifact(kind, producer, status, data, source) {
+    seed := kind + ":" + producer + ":" + to_json(data)
+    return {
+        "artifact_id": stable_id("evd", seed),
+        "kind": kind,
+        "producer": producer,
+        "created_at_ms": now_ms(),
+        "status": status,
+        "source": source,
+        "data": data,
+        "digest": sha256(to_json(data))
+    }
+}
+
+export func criterion(id, statement, source, risk) {
+    return {
+        "id": id,
+        "statement": statement,
+        "source": source,
+        "risk": risk,
+        "status": "unverified",
+        "evidence_ids": []
+    }
+}
+
+export func verification(id, name, command, required, capability) {
+    return {
+        "id": id,
+        "name": name,
+        "command": command,
+        "required": required,
+        "capability": capability,
+        "status": "pending",
+        "exit_code": null,
+        "duration_ms": 0,
+        "output_digest": "",
+        "summary": ""
+    }
+}
+
+export func risk(id, category, severity, summary, requires_human, evidence) {
+    return {
+        "id": id,
+        "category": category,
+        "severity": severity,
+        "summary": summary,
+        "requires_human": requires_human,
+        "status": "open",
+        "evidence": evidence
+    }
+}
+
+export func validate_run(run) {
+    errors := []
+    if type(run) != "dict" { return {"ok": false, "errors": ["run must be an object"]} }
+    if get_or(run, "schema", "") != "foreman.run/v1" { errors = push(errors, "unsupported run schema") }
+    if text(get_or(run, "run_id", ""), "") == "" { errors = push(errors, "run_id is required") }
+    if type(get_or(run, "verification_results", null)) != "array" { errors = push(errors, "verification_results must be an array") }
+    if type(get_or(run, "risk_findings", null)) != "array" { errors = push(errors, "risk_findings must be an array") }
+    if type(get_or(run, "evidence", null)) != "array" { errors = push(errors, "evidence must be an array") }
+    return {"ok": len(errors) == 0, "errors": errors}
+}
+

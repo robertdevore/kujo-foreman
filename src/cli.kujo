@@ -1,0 +1,166 @@
+from src.common import get_or, truthy
+from src.engine import validate_repository, analyze_change, derive_specification, analyze_risk, plan_verification, run_verification, run_all
+from src.judge import decide
+from src.evidence import write_package, verify_package
+from src.policy import capability_profiles, capability_allowed, repair_authorization, injection_signals
+from src.model import validate_run
+from src.repair import propose_repairs, decision_packet, apply_repair
+
+VERSION := "0.1.0"
+
+func usage() {
+    print("Kujo Foreman " + VERSION)
+    print("")
+    print("AI writes code. Foreman decides whether it ships.")
+    print("")
+    print("Usage:")
+    print("  kujo run main.kujo -- run --repo PATH [--base REF] [--head REF] --intent TEXT")
+    print("  kujo run main.kujo -- analyze --repo PATH [--base REF] [--head REF]")
+    print("  kujo run main.kujo -- specify --intent TEXT --change FILE")
+    print("  kujo run main.kujo -- risk --intent TEXT --change FILE")
+    print("  kujo run main.kujo -- plan --repo PATH")
+    print("  kujo run main.kujo -- verify-one --repo PATH --check FILE")
+    print("  kujo run main.kujo -- judge --run FILE")
+    print("  kujo run main.kujo -- evidence --run FILE --output DIR")
+    print("  kujo run main.kujo -- verify-evidence DIR")
+    print("  kujo run main.kujo -- capabilities")
+    print("  kujo run main.kujo -- policy-check --agent ID --capability ID")
+    print("  kujo run main.kujo -- repair-propose --repo PATH --change FILE")
+    print("  kujo run main.kujo -- repair-apply --repo PATH --proposal FILE [--approval FILE]")
+    print("  kujo run main.kujo -- version")
+}
+
+func option(argv, name, fallback) {
+    i := 0
+    while i < len(argv) {
+        if argv[i] == name && i + 1 < len(argv) { return argv[i + 1] }
+        prefix := name + "="
+        if starts_with(argv[i], prefix) { return substring(argv[i], len(prefix), len(argv[i])) }
+        i = i + 1
+    }
+    return fallback
+}
+
+func load_json(path) {
+    try { return {"ok": true, "value": parse_json(read_file(path))} }
+    except err { return {"ok": false, "error": to_string(err)} }
+}
+
+func print_result(value) {
+    print(to_json(value))
+}
+
+func exit_for(ok, failure_code) {
+    if ok { return 0 }
+    return failure_code
+}
+
+export func main(argv) {
+    if len(argv) == 0 || argv[0] == "help" || argv[0] == "--help" { usage(); return 0 }
+    command := argv[0]
+    if command == "version" || command == "--version" { print(VERSION); return 0 }
+
+    repo := option(argv, "--repo", ".")
+    base_ref := option(argv, "--base", "HEAD~1")
+    head_ref := option(argv, "--head", "HEAD")
+    intent := option(argv, "--intent", "Assess the selected change for release readiness.")
+    kujo_bin := option(argv, "--kujo-bin", env_or("KUJO_BIN", "kujo"))
+
+    if command == "analyze" { result := analyze_change(repo, base_ref, head_ref); print_result(result); return exit_for(get_or(result, "ok", false), 1) }
+    if command == "plan" { result := plan_verification(repo); print_result(result); return exit_for(get_or(result, "ok", false), 1) }
+    if command == "capabilities" { print_result({"schema": "foreman.capability-profiles/v1", "profiles": capability_profiles()}); return 0 }
+    if command == "policy-check" {
+        agent_id := option(argv, "--agent", "")
+        capability := option(argv, "--capability", "")
+        allowed := capability_allowed(agent_id, capability)
+        print_result({"allowed": allowed, "agent": agent_id, "capability": capability})
+        return exit_for(allowed, 3)
+    }
+    if command == "verify-evidence" {
+        evidence_dir := option(argv, "--dir", "")
+        if evidence_dir == "" && len(argv) > 1 { evidence_dir = argv[1] }
+        result := verify_package(evidence_dir)
+        print_result(result)
+        return exit_for(result["ok"], 1)
+    }
+
+    if command == "repair-propose" {
+        loaded := load_json(option(argv, "--change", ""))
+        if !loaded["ok"] { print_result(loaded); return 2 }
+        change := get_or(get_or(loaded["value"], "artifact", loaded["value"]), "data", loaded["value"])
+        result := propose_repairs(repo, get_or(change, "files", []))
+        print_result(result)
+        return 0
+    }
+
+    if command == "repair-apply" {
+        loaded := load_json(option(argv, "--proposal", ""))
+        if !loaded["ok"] { print_result(loaded); return 2 }
+        approval := {"approved": false}
+        approval_path := option(argv, "--approval", "")
+        if approval_path != "" {
+            loaded_approval := load_json(approval_path)
+            if !loaded_approval["ok"] { print_result(loaded_approval); return 2 }
+            approval = loaded_approval["value"]
+        }
+        limits := {"max_repair_files": to_int(env_or("FOREMAN_MAX_REPAIR_FILES", "3")), "max_repair_lines": to_int(env_or("FOREMAN_MAX_REPAIR_LINES", "120"))}
+        result := apply_repair(repo, loaded["value"], limits, approval)
+        print_result(result)
+        return exit_for(result["ok"], 1)
+    }
+
+    if command == "specify" || command == "risk" {
+        loaded := load_json(option(argv, "--change", ""))
+        if !loaded["ok"] { print_result(loaded); return 2 }
+        change := get_or(get_or(loaded["value"], "artifact", loaded["value"]), "data", loaded["value"])
+        result := derive_specification(intent, change)
+        if command == "risk" { result = analyze_risk(intent, change) }
+        print_result(result)
+        return 0
+    }
+
+    if command == "verify-one" {
+        loaded := load_json(option(argv, "--check", ""))
+        if !loaded["ok"] { print_result(loaded); return 2 }
+        result := run_verification(repo, loaded["value"], kujo_bin)
+        print_result(result)
+        return exit_for(get_or(result, "status", "failed") == "passed", 1)
+    }
+
+    if command == "judge" || command == "evidence" {
+        loaded := load_json(option(argv, "--run", ""))
+        if !loaded["ok"] { print_result(loaded); return 2 }
+        valid := validate_run(loaded["value"])
+        if !valid["ok"] { print_result(valid); return 2 }
+        if command == "judge" { print_result(decide(loaded["value"])); return 0 }
+        package := write_package(loaded["value"], option(argv, "--output", "artifacts/runs"))
+        print_result(package)
+        return exit_for(package["ok"], 1)
+    }
+
+    if command == "run" {
+        limits := {
+            "max_repair_iterations": to_int(env_or("FOREMAN_MAX_REPAIR_ITERATIONS", "2")),
+            "max_repair_files": to_int(env_or("FOREMAN_MAX_REPAIR_FILES", "3")),
+            "max_repair_lines": to_int(env_or("FOREMAN_MAX_REPAIR_LINES", "120"))
+        }
+        result := run_all(repo, base_ref, head_ref, intent, option(argv, "--output", "artifacts/runs"), kujo_bin, limits)
+        print_result(result)
+        return exit_for(get_or(result, "ok", false), 1)
+    }
+
+    if command == "self-test-policy" {
+        proposal := {"summary": option(argv, "--summary", "format docs"), "path": option(argv, "--path", "README.md"), "changed_files": 1, "changed_lines": 2, "kind": "deterministic"}
+        print_result({"repair": repair_authorization(proposal, {"max_repair_files": 3, "max_repair_lines": 120}), "injection_signals": injection_signals(option(argv, "--content", ""))})
+        return 0
+    }
+
+    if command == "doctor" {
+        repo_result := validate_repository(repo)
+        print_result({"ok": repo_result["ok"], "version": VERSION, "runtime": "kujo", "strands_bridge": path_exists("strands-bridge/package.json"), "repository": repo_result})
+        return exit_for(repo_result["ok"], 1)
+    }
+
+    usage()
+    return 2
+}

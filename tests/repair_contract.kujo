@@ -1,0 +1,25 @@
+from src.repair import propose_repairs, apply_repair
+from src.common import safe_process
+
+root := env_or("TMPDIR", "/tmp") + "/kujo-foreman-repair-contract"
+safe_process(["rm", "-rf", root], {"timeout_ms": 5000, "max_output_bytes": 1000})
+safe_process(["mkdir", "-p", root + "/docs"], {"timeout_ms": 5000, "max_output_bytes": 1000})
+write_file(root + "/docs/operations.md", "The fallback is threee attempts.\n")
+
+proposed := propose_repairs(root, ["docs/operations.md"])
+assert(len(proposed["proposals"]) == 1, "known deterministic typo should produce one proposal")
+applied := apply_repair(root, proposed["proposals"][0], {"max_repair_files": 3, "max_repair_lines": 120}, {"approved": false})
+assert(applied["ok"], "low-risk deterministic repair should apply")
+assert(read_file(root + "/docs/operations.md") == "The fallback is three attempts.\n", "repair should make the exact replacement")
+
+stale := apply_repair(root, proposed["proposals"][0], {"max_repair_files": 3, "max_repair_lines": 120}, {"approved": false})
+assert(!stale["ok"] && stale["code"] == "stale_proposal", "stale repair proposal must fail closed")
+
+unsafe := parse_json(to_json(proposed["proposals"][0]))
+unsafe["path"] := "../outside"
+denied := apply_repair(root, unsafe, {"max_repair_files": 3, "max_repair_lines": 120}, {"approved": true})
+assert(!denied["ok"] && denied["code"] == "unsafe_path", "human approval must not bypass path containment")
+
+safe_process(["rm", "-rf", root], {"timeout_ms": 5000, "max_output_bytes": 1000})
+print("bounded repair contract: passed")
+

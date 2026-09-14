@@ -1,0 +1,91 @@
+from src.common import get_or
+
+export func decide(run) {
+    blockers := []
+    notes := []
+    required_total := 0
+    required_passed := 0
+    checks := get_or(run, "verification_results", [])
+    i := 0
+    while i < len(checks) {
+        check := checks[i]
+        if get_or(check, "required", false) {
+            required_total = required_total + 1
+            if get_or(check, "status", "pending") == "passed" {
+                required_passed = required_passed + 1
+            } else {
+                blockers = push(blockers, "Required verification did not pass: " + get_or(check, "name", get_or(check, "id", "unknown")))
+            }
+        } else {
+            if get_or(check, "status", "pending") != "passed" {
+                notes = push(notes, "Advisory verification incomplete: " + get_or(check, "name", get_or(check, "id", "unknown")))
+            }
+        }
+        i = i + 1
+    }
+
+    if required_total == 0 { blockers = push(blockers, "No required verification evidence was produced.") }
+
+    needs_human := false
+    risks := get_or(run, "risk_findings", [])
+    i = 0
+    while i < len(risks) {
+        finding := risks[i]
+        if get_or(finding, "status", "open") == "open" {
+            if get_or(finding, "requires_human", false) {
+                needs_human = true
+            } else {
+                severity := get_or(finding, "severity", "low")
+                if severity == "critical" || severity == "high" {
+                    blockers = push(blockers, "Open " + severity + " risk: " + get_or(finding, "summary", "unknown"))
+                } else {
+                    notes = push(notes, get_or(finding, "summary", "Open review note"))
+                }
+            }
+        }
+        i = i + 1
+    }
+
+    evidence := get_or(run, "evidence", [])
+    if len(evidence) == 0 { blockers = push(blockers, "Release evidence package is empty.") }
+
+    if needs_human {
+        return {
+            "disposition": "HUMAN_DECISION_REQUIRED",
+            "reason": "A high-consequence ambiguity cannot be resolved safely from available authority.",
+            "evidence_complete": false,
+            "required_checks": {"passed": required_passed, "total": required_total},
+            "blockers": blockers,
+            "notes": notes
+        }
+    }
+    if len(blockers) > 0 {
+        return {
+            "disposition": "BLOCKED",
+            "reason": "Required evidence is missing, failed, or conflicts with release policy.",
+            "evidence_complete": false,
+            "required_checks": {"passed": required_passed, "total": required_total},
+            "blockers": blockers,
+            "notes": notes
+        }
+    }
+    if len(notes) > 0 {
+        return {
+            "disposition": "READY_WITH_NOTES",
+            "reason": "All required deterministic gates passed; advisory notes remain for review.",
+            "evidence_complete": true,
+            "required_checks": {"passed": required_passed, "total": required_total},
+            "blockers": [],
+            "notes": notes
+        }
+    }
+    return {
+        "disposition": "READY_TO_SHIP",
+        "reason": "All required evidence is complete and every deterministic release gate passed.",
+        "evidence_complete": true,
+        "required_checks": {"passed": required_passed, "total": required_total},
+        "blockers": [],
+        "notes": []
+    }
+}
+

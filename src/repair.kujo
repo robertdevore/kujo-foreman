@@ -1,0 +1,94 @@
+from src.common import get_or, stable_id, now_ms, truthy
+from src.policy import repair_authorization
+
+func safe_relative(path) {
+    if path == "" || starts_with(path, "/") || contains(path, "..") || contains(path, "\\") { return false }
+    return true
+}
+
+export func propose_repairs(repo, changed_files) {
+    proposals := []
+    file_index := 0
+    while file_index < len(changed_files) {
+        relative := changed_files[file_index]
+        if safe_relative(relative) && (ends_with(relative, ".md") || ends_with(relative, ".txt")) {
+            full_path := repo + "/" + relative
+            if path_exists(full_path) {
+                content := read_file(full_path)
+                if contains(content, "threee") {
+                    seed := relative + ":threee:three:" + sha256(content)
+                    proposals = push(proposals, {
+                        "proposal_id": stable_id("rpr", seed),
+                        "kind": "deterministic",
+                        "rule": "docs-common-typo-v1",
+                        "summary": "Correct an unambiguous documentation typo.",
+                        "path": relative,
+                        "expected_digest": sha256(content),
+                        "find": "threee",
+                        "replace": "three",
+                        "changed_files": 1,
+                        "changed_lines": 1,
+                        "created_at_ms": now_ms()
+                    })
+                }
+            }
+        }
+        file_index = file_index + 1
+    }
+    return {"ok": true, "proposals": proposals}
+}
+
+export func decision_packet(run, finding) {
+    project := get_or(run, "project", {})
+    return {
+        "schema": "foreman.human-decision/v1",
+        "decision_id": stable_id("dec", get_or(run, "run_id", "") + ":" + get_or(finding, "id", "")),
+        "status": "pending",
+        "decision": "Should this change alter the existing externally observable behavior?",
+        "why_stopped": get_or(finding, "summary", "Available requirements do not authorize this high-consequence change."),
+        "evidence": get_or(finding, "evidence", []),
+        "repository": get_or(project, "repository", ""),
+        "options": [
+            {"id": "preserve-existing", "label": "Preserve existing behavior", "effect": "Restore the previously authorized value."},
+            {"id": "accept-change", "label": "Accept changed behavior", "effect": "Treat the new value as explicitly authorized."},
+            {"id": "provide-requirement", "label": "Provide another requirement", "effect": "Keep the run paused until a clearer contract is supplied."}
+        ],
+        "recommended_option": "preserve-existing",
+        "confidence": "high"
+    }
+}
+
+export func apply_repair(repo, proposal, limits, approval) {
+    relative := get_or(proposal, "path", "")
+    if safe_relative(relative) == false { return {"ok": false, "code": "unsafe_path", "message": "Repair path must be repository-relative."} }
+    full_path := repo + "/" + relative
+    if !path_exists(full_path) { return {"ok": false, "code": "missing_file", "message": "Repair target does not exist."} }
+    current := read_file(full_path)
+    if sha256(current) != get_or(proposal, "expected_digest", "") {
+        return {"ok": false, "code": "stale_proposal", "message": "Target digest changed after proposal creation."}
+    }
+    authorization := repair_authorization(proposal, limits)
+    human_approved := truthy(get_or(approval, "approved", false))
+    authorized := truthy(get_or(authorization, "allowed", false))
+    if authorized == false && human_approved == false {
+        return {"ok": false, "code": "approval_required", "message": authorization["reason"], "authorization": authorization}
+    }
+    find_value := get_or(proposal, "find", "")
+    replace_value := get_or(proposal, "replace", "")
+    if find_value == "" || contains(current, find_value) == false {
+        return {"ok": false, "code": "pattern_missing", "message": "Exact repair pattern was not found."}
+    }
+    updated := replace(current, find_value, replace_value)
+    try { write_file_atomic(full_path, updated, true) }
+    except err { return {"ok": false, "code": "write_failed", "message": to_string(err)} }
+    return {
+        "ok": true,
+        "repair_id": stable_id("fix", get_or(proposal, "proposal_id", "") + ":" + sha256(updated)),
+        "proposal_id": get_or(proposal, "proposal_id", ""),
+        "path": relative,
+        "before_digest": sha256(current),
+        "after_digest": sha256(updated),
+        "human_approved": human_approved,
+        "applied_at_ms": now_ms()
+    }
+}
