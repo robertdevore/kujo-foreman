@@ -95,6 +95,6 @@ the machine can already prove.”
 
 - Use a fresh demo workspace and real live events.
 - Keep terminal text at readable size; no hidden cuts across failures.
-- Show AgentCore only if the endpoint is genuinely deployed.
+- Show the AgentCore Runtime in `READY` state, then use the live run rather than a console-only claim.
 - Do not state fixed test counts; narrate the values displayed by the run.
 - Export 1080p, verify audio, and keep final duration below 5:00.

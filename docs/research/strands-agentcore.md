@@ -47,6 +47,12 @@ Important sources:
 - [Service limits](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/bedrock-agentcore-limits.html)
 
 The current npm-distributed AgentCore CLI 0.29.0 configuration, CDK application,
-least-privilege Bedrock policy, and multi-architecture container are checked in.
-The configured local AWS credentials were rejected by STS during the final
-deployment attempt, so no deployed resource is claimed.
+scoped Bedrock policy, and multi-architecture container are checked in. The
+private IAM-authorized runtime was deployed to `us-east-1` and its complete
+start, poll, escalation, human-decision, and `READY_TO_SHIP` path was verified on
+September 14, 2026.
+
+Amazon Nova Pro is the official runtime default. It provides strong reasoning
+through the native Bedrock model family while avoiding an external Marketplace
+entitlement on a new AWS account. The Strands provider boundary keeps model
+selection configurable without changing the graph or release gate.

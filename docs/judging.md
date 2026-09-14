@@ -5,7 +5,7 @@ internal readiness assessment, not a claim about judging results.
 
 | Dimension | Readiness | What would raise it |
 |---|---:|---|
-| Technical implementation | 4/5 | Complete the credentialed AgentCore deployment and a live Workcell container receipt. |
+| Technical implementation | 5/5 | Preserve the verified cloud smoke and immutable deployment receipt. |
 | Design | 5/5 | Preserve the focused operator console and real event-driven states during recording. |
 | Potential impact | 4/5 | Add evidence from a second real-world repository and a GitHub adapter after submission. |
 | Creativity and originality | 5/5 | Keep the “release evidence, not review opinion” story central. |
@@ -27,7 +27,7 @@ Foreman's shortest differentiator is:
 ## Claims audit
 
 - The local recording must say **managed workspace**, not Workcell container.
-- AgentCore must be described as deployment-ready until a live ARN is verified.
+- AgentCore may be described as deployed: Runtime version 6 and its live golden-path receipt are verified.
 - Static `/preview` data must remain visibly labeled and cannot be used as the
   primary demonstration.
 - Counts must be read from the live run; none should be narrated from fixture

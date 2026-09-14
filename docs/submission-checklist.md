@@ -25,13 +25,13 @@ September 13, 2026.
 - [x] Demonstration script and shot list target 4:00–4:40.
 - [ ] Public YouTube or Vimeo demonstration video, no longer than 5:00.
 - [ ] Final video URL entered in Devpost.
-- [ ] Working live-demo URL entered if AgentCore deployment succeeds.
+- [x] Deployed AgentCore endpoint documented; it intentionally remains private and IAM-authorized rather than presented as a public live-demo URL.
 
 ## Claim integrity
 
 - [x] No mock results appear in the product demo path.
 - [x] Offline mode is clearly identified and still executes real repository checks.
-- [x] Deployment status is stated exactly; configuration is not called a deployment.
+- [x] Deployment status is backed by a versioned runtime receipt and real cloud smoke.
 - [x] Test counts and timing claims are generated from artifacts, not hard-coded marketing copy.
 - [x] Deterministic readiness gate fails closed on incomplete or conflicting evidence.
 - [x] Release artifacts carry checksums and provenance.
@@ -47,6 +47,6 @@ September 13, 2026.
 
 - [x] Fresh install rehearsal completed from a clean clone.
 - [x] Golden demo rehearsal completed within five minutes.
-- [x] AgentCore CLI configuration validates; CDK compiles; AWS remains explicitly undeployed after STS rejected the configured credentials.
+- [x] AgentCore CLI configuration validates; CDK compiles; Runtime version 6 completed the full cloud golden path.
 - [ ] Devpost preview checked for broken links, image rendering, and license detection.
 - [ ] Submission clicked and confirmation captured.

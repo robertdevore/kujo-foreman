@@ -135,9 +135,11 @@ development, tests, and reliable rehearsals—not as a fake result mode.
 AgentCore Runtime files are in [agentcore](agentcore/README.md), including the
 current CLI configuration, generated CDK application, scoped Bedrock policy, and
 multi-architecture container. The service exposes AgentCore's `/ping` and
-`/invocations` contract as well as the browser API. Deployment requires valid AWS
-credentials and is never claimed unless the smoke test against the deployed
-endpoint succeeds.
+`/invocations` contract as well as the browser API. The private IAM-authorized
+runtime is deployed in `us-east-1` with Amazon Nova Pro and passed the full cloud
+golden path on September 14, 2026. The checked-in
+[deployment receipt](agentcore/deployment.json) identifies the exact runtime
+version and verified release decision.
 
 ## Release evidence
 
@@ -189,9 +191,8 @@ npm run agentcore:validate
 # Full containerized golden-path smoke test after starting the image
 npm run agentcore:smoke
 
-# Deterministic multi-scenario evaluation
-kujo run --isolated-imports --interpreter ../eval/main.kujo \
-  run eval/foreman-eval.json --output-dir .eval-results --json
+# Deterministic multi-scenario evaluation is included in the Kujo suite
+kujo test -v
 ```
 
 The suite covers clean, repairable, regressed, ambiguous, prompt-injected,

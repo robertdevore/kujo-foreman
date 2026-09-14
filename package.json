@@ -13,6 +13,7 @@
     "install:all": "npm --prefix strands-bridge ci && npm --prefix apps/web ci && npm --prefix agentcore/cdk ci",
     "agentcore:validate": "agentcore validate --json && npm --prefix agentcore/cdk run build",
     "agentcore:smoke": "node scripts/agentcore-smoke.mjs",
+    "agentcore:cloud-smoke": "node scripts/agentcore-cloud-smoke.mjs",
     "lint": "npm --prefix apps/web run lint",
     "test": "npm --prefix strands-bridge test && npm --prefix apps/web run test",
     "test:kujo": "kujo test -v",

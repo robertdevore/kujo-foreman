@@ -1,0 +1,20 @@
+{
+  "$schema": "foreman.agentcore-deployment/v1",
+  "region": "us-east-1",
+  "stackName": "AgentCore-KujoForeman-default",
+  "runtimeId": "KujoForeman_Foreman-coug644015",
+  "runtimeArn": "arn:aws:bedrock-agentcore:us-east-1:394050189667:runtime/KujoForeman_Foreman-coug644015",
+  "runtimeVersion": 6,
+  "model": "amazon.nova-pro-v1:0",
+  "verifiedAt": "2026-09-14T15:43:56.399Z",
+  "verification": {
+    "runId": "frm-9c79a0c1",
+    "disposition": "READY_TO_SHIP",
+    "evidenceComplete": true,
+    "evidenceCount": 7,
+    "verificationChecks": 2,
+    "automaticRepairs": 1,
+    "humanDecisions": 1,
+    "blockers": 0
+  }
+}
