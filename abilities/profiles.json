@@ -3,11 +3,10 @@
   "profiles": {
     "change-analyst": ["kujo.foreman.change.analyze", "kujo.patchbrief.changes.summarize", "kujo.scout.repository.inspect"],
     "specification": ["kujo.spec.contract.validate"],
-    "verification": ["kujo.foreman.verification.plan", "kujo.foreman.workcell.verify", "kujo.eval.suite.run", "kujo.fence.architecture.check", "kujo.shipcheck.repository.scan"],
+    "verification": ["kujo.foreman.verification.plan", "kujo.foreman.verification.execute", "kujo.eval.suite.run", "kujo.fence.architecture.check", "kujo.shipcheck.repository.scan"],
     "risk": ["kujo.foreman.change.analyze", "kujo.scout.repository.inspect"],
-    "repair": ["kujo.foreman.repair.apply-bounded", "kujo.foreman.workcell.verify"],
+    "repair": ["kujo.foreman.repair.apply-bounded", "kujo.foreman.verification.execute"],
     "release-judge": ["kujo.foreman.release.judge"],
     "escalation": ["kujo.foreman.release.judge"]
   }
 }
-

@@ -12,8 +12,8 @@ September 13, 2026.
 - [x] Strands Agents is a substantive part of the implementation.
 - [x] English-language repository and submission materials.
 - [x] MIT license.
-- [ ] Public repository URL entered in Devpost.
-- [ ] Repository remains freely accessible through judging.
+- [ ] Public repository URL entered in Devpost: `https://github.com/robertdevore/kujo-foreman`.
+- [x] Repository is public and freely accessible for judging.
 - [ ] AWS Builder ID entered in Devpost.
 - [ ] Final submission entered before September 14, 2026 at 5:00 PM PDT / 8:00 PM EDT.
 

@@ -197,6 +197,7 @@ unit tests, while the golden path is a genuine Git/Kujo/Strands/UI execution.
 - [Kujo source audit](docs/research/kujo-audit.md)
 - [Strands and AgentCore research](docs/research/strands-agentcore.md)
 - [Threat model](docs/threat-model.md)
+- [Judge-perspective scorecard](docs/judging.md)
 - [Pre-existing work disclosure](PREEXISTING_WORK.md)
 - [Devpost copy](docs/devpost.md)
 - [Demo script](docs/video-script.md)
