@@ -2,6 +2,10 @@
 
 **AI writes code. Foreman decides whether it ships.**
 
+Version **0.1.0** is the first source release. Local fixture verification and
+historical cloud deployment evidence have separate scopes; this release does
+not imply a fresh authenticated cloud deployment.
+
 Kujo Foreman is an autonomous release-readiness agent built with Kujo, Strands
 Agents, Amazon Bedrock, and Amazon Bedrock AgentCore. Give it a Git change. It
 reconstructs intent, derives acceptance criteria, runs repository-native checks,
@@ -33,7 +37,7 @@ attempt, and an unauthorized change to financial retry semantics. Foreman:
 
 ### Run it locally
 
-Prerequisites are Node.js 22+, Git, and Kujo 1.4.0. Download the matching Kujo
+Prerequisites are patched Node.js 22.23.4, 24.22.1, or 26.12.1 (or a newer supported patch), Git, and Kujo 1.4.0. Download the matching Kujo
 1.4.0 archive from the [release page](https://github.com/kujolang/kujo/releases/tag/v1.4.0),
 put `kujo` on your `PATH`, and verify it with `kujo --version`.
 
